@@ -3,3 +3,5 @@ export const ProfileContext = React.createContext({
 });
 
 export function loginProvider() {}
+
+export function logOutProvider() {}

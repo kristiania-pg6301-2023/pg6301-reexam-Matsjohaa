@@ -7,6 +7,7 @@ import { MongoClient } from "mongodb";
 import { PostsApi } from "./api/postsApi.js";
 import { fetchJSON } from "./utils/jsonUtils.js";
 //import { LoginApi } from "./api/loginApi.js";
+import fetch from "node-fetch";
 
 dotenv.config();
 const app = express();
@@ -21,28 +22,63 @@ mongoClient.connect().then(() => {
 
 app.use(express.static("../client/dist"));
 app.use(bodyParser.json());
-app.use(cookieParser(process.env.COOKIE_SECRET));
+
 //app.use("api/login", LoginApi());
 
 //login
-app.get("api/login", async (req, res) => {
-  const { access_token } = req.signedCookies;
 
-  const { userinfo_endpoint } = await fetchJSON(
-    "https://accounts.google.com/.well-known/openid-configuration",
-  );
+app.use("api/login", loginApi);
 
-  const userinfo = await fetchJSON(userinfo_endpoint, {
-    headers: {
-      Authorizatrion: `bearer ${access_token}`,
-    },
+app.use(cookieParser(process.env.COOKIE_SECRET));
+
+const discoveryEndpoint =
+  "https://accounts.google.com/.well-known/openid-configuration";
+
+app.get("/api/config", (req, res) => {
+  res.json({
+    client_id: process.env.GOOGLE_CLIENT_ID,
+    discovery_endpoint: discoveryEndpoint,
+    response_type: "token",
   });
-  res.json(userinfo);
 });
 
-app.post("api/login", (req, res) => {
+app.get("/api/login", async (req, res) => {
+  const { access_token } = req.signedCookies;
+
+  if (!access_token) {
+    console.log("No access token found in cookies");
+    return res.sendStatus(401); // Unauthorized
+  }
+
+  try {
+    const { userinfo_endpoint } = await fetchJSON(discoveryEndpoint);
+    const userinfo = await fetch(userinfo_endpoint, {
+      headers: {
+        Authorization: `Bearer ${access_token}`,
+      },
+    });
+
+    if (!userinfo.ok) {
+      console.log(
+        `Failed to fetch user info: ${userinfo.status} ${userinfo.statusText}`,
+      );
+      return res.sendStatus(500);
+    }
+
+    res.json(await userinfo.json());
+  } catch (err) {
+    console.error("Error fetching user info:", err);
+    res.sendStatus(500);
+  }
+});
+app.post("/api/login", (req, res) => {
   const { access_token } = req.body;
   res.cookie("access_token", access_token, { signed: true });
+  res.sendStatus(200);
+});
+
+app.delete("/api/login", (req, res) => {
+  res.clearCookie("access_token");
   res.sendStatus(200);
 });
 

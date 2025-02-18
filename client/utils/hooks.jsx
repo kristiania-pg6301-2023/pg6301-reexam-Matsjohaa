@@ -1,21 +1,24 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 
-export function useLoader(loadingFunction) {
+export function useLoader(fetchFunction) {
   const [loading, setLoading] = useState(true);
-  const [data, setData] = useState();
-  const [error, setError] = useState();
+  const [error, setError] = useState(null);
+  const [data, setData] = useState(null);
 
-  async function load() {
-    try {
-      setLoading(true);
-      setData(await loadingFunction());
-    } catch (error) {
-      setError(error);
-    } finally {
-      setLoading(false);
+  useEffect(() => {
+    async function loadData() {
+      try {
+        const result = await fetchFunction();
+        setData(result);
+      } catch (err) {
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
     }
-  }
 
-  useEffect(() => load(), []);
-  return { loading, data, error };
+    loadData();
+  }, [fetchFunction]); // Runs only when `fetchFunction` changes
+
+  return { loading, error, data };
 }
