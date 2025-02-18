@@ -1,17 +1,30 @@
-import { useLoader } from "../utils/hooks";
+import React, { useState, useEffect } from "react";
 import { fetchJSON } from "../utils/json";
+import { Link } from "react-router-dom";
 
 export const Profile = () => {
-  const { loading, data, error } = useLoader(async () => {
-    try {
-      return await fetchJSON("/api/login");
-    } catch (err) {
-      throw new Error(`Failed to load profile: ${err.message}`);
-    }
-  });
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const loadProfile = async () => {
+      try {
+        console.log("Fetching user profile...");
+        const userInfo = await fetchJSON("/api/login");
+        setData(userInfo);
+      } catch (err) {
+        setError(`Failed to load profile: ${err.message}`);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProfile();
+  }, []);
 
   if (loading) return <div>Please wait...</div>;
-  if (error) return <div>Error! {error.toString()}</div>;
+  if (error) return <div>Error! {error}</div>;
 
   if (!data || !data.name || !data.email) {
     return <div>Error: Invalid user data</div>;
@@ -19,11 +32,12 @@ export const Profile = () => {
 
   return (
     <div>
+      <Link to="/">Home</Link>
       <h1>
         Profile for {data.name} ({data.email})
       </h1>
       <div>
-        <img src={data.picture} alt="Profile picture" />
+        <img src={data.picture} alt="Profile" />
       </div>
     </div>
   );
