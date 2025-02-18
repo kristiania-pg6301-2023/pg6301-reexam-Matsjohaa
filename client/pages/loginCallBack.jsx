@@ -8,26 +8,49 @@ export const LoginCallBack = () => {
   useEffect(() => {
     async function handleLogin() {
       try {
-        const { access_token } = Object.fromEntries(
-          new URLSearchParams(window.location.hash.substring(1)),
+        // Check if this is a GitHub callback (has `code` in query params)
+        const { code } = Object.fromEntries(
+          new URLSearchParams(window.location.search),
         );
 
-        if (!access_token) {
-          throw new Error("No access token found");
-        }
+        if (code) {
+          // GitHub OAuth flow
+          const res = await fetch("/api/github/login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ code }),
+          });
 
-        const res = await fetch("/api/login", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ access_token }),
-        });
-
-        if (res.ok) {
-          navigate("/");
+          if (res.ok) {
+            navigate("/profile");
+          } else {
+            setError(`Failed to login: ${res.status} ${res.statusText}`);
+          }
         } else {
-          setError(`Failed to login: ${res.status} ${res.statusText}`);
+          // Google OAuth flow
+          const { access_token } = Object.fromEntries(
+            new URLSearchParams(window.location.hash.substring(1)),
+          );
+
+          if (!access_token) {
+            throw new Error("No access token found");
+          }
+
+          const res = await fetch("/api/login", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ access_token }),
+          });
+
+          if (res.ok) {
+            navigate("/");
+          } else {
+            setError(`Failed to login: ${res.status} ${res.statusText}`);
+          }
         }
       } catch (err) {
         setError(err.message);
@@ -35,7 +58,7 @@ export const LoginCallBack = () => {
     }
 
     handleLogin();
-  }, [navigate]); // ✅ Dependency array includes navigate
+  }, [navigate]);
 
   if (error) {
     return (

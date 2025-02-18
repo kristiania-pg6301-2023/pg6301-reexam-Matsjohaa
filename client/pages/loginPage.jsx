@@ -1,20 +1,26 @@
 import React, { useContext, useEffect, useState } from "react";
 import { fetchJSON } from "../utils/json";
 import googleSignInImage from "../images/google-signin.png";
+import githubSignInImage from "../images/github-signin.png"; // Add a GitHub sign-in image
 import { LoginContext } from "../app";
 import { Link } from "react-router-dom";
 
 export const Login = () => {
-  const { discovery_endpoint, client_id, response_type } =
-    useContext(LoginContext);
-  const [redirectUrl, setRedirectUrl] = useState(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(null); // Tracks if user is logged in
+  const {
+    google_client_id,
+    google_discovery_endpoint,
+    github_client_id,
+    response_type,
+  } = useContext(LoginContext);
+  const [googleRedirectUrl, setGoogleRedirectUrl] = useState(null);
+  const [githubRedirectUrl, setGithubRedirectUrl] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     const checkLoginStatus = async () => {
       try {
-        const user = await fetchJSON("/api/login"); // Check if user is logged in
+        const user = await fetchJSON("/api/login");
         if (user && user.email) {
           setIsAuthenticated(true);
         } else {
@@ -25,17 +31,30 @@ export const Login = () => {
       }
     };
 
-    const getAuthUrl = async () => {
+    const getAuthUrls = async () => {
       try {
-        const { authorization_endpoint } = await fetchJSON(discovery_endpoint);
-        const parameters = {
+        // Google OAuth URL
+        const { authorization_endpoint } = await fetchJSON(
+          google_discovery_endpoint,
+        );
+        const googleParameters = {
           response_type,
-          client_id,
+          client_id: google_client_id,
           scope: "email profile",
           redirect_uri: window.location.origin + "/login/callback",
         };
-        setRedirectUrl(
-          authorization_endpoint + "?" + new URLSearchParams(parameters),
+        setGoogleRedirectUrl(
+          authorization_endpoint + "?" + new URLSearchParams(googleParameters),
+        );
+
+        // GitHub OAuth URL
+        const githubParameters = {
+          client_id: github_client_id,
+          redirect_uri: window.location.origin + "/login/callback",
+          scope: "user",
+        };
+        setGithubRedirectUrl(
+          `https://github.com/login/oauth/authorize?${new URLSearchParams(githubParameters)}`,
         );
       } catch (err) {
         setError("Failed to load authentication details.");
@@ -43,7 +62,7 @@ export const Login = () => {
     };
 
     checkLoginStatus();
-    getAuthUrl();
+    getAuthUrls();
   }, []);
 
   if (isAuthenticated === null) {
@@ -80,9 +99,14 @@ export const Login = () => {
       {error ? (
         <p>{error}</p>
       ) : (
-        <a href={redirectUrl}>
-          <img src={googleSignInImage} alt="Sign in with Google" />
-        </a>
+        <div>
+          <a href={googleRedirectUrl}>
+            <img src={googleSignInImage} alt="Sign in with Google" />
+          </a>
+          <a href={githubRedirectUrl}>
+            <img src={githubSignInImage} alt="Sign in with GitHub" />
+          </a>
+        </div>
       )}
     </div>
   );
