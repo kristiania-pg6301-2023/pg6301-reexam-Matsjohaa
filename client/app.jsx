@@ -10,7 +10,9 @@ import { fetchJSON } from "./utils/json";
 export const LoginContext = React.createContext({});
 //
 export function App() {
-  const { loading, error, data } = useLoader(() => fetchJSON("/api/config"));
+  const { loading, error, data } = useLoader(() =>
+    fetchJSON("/api/login/config"),
+  );
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error.toString()}</div>;

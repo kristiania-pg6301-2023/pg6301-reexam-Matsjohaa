@@ -15,7 +15,7 @@ export const LoginCallBack = () => {
 
         if (code) {
           // GitHub OAuth flow
-          const res = await fetch("/api/github/login", {
+          const res = await fetch("/api/login/github", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -24,7 +24,7 @@ export const LoginCallBack = () => {
           });
 
           if (res.ok) {
-            navigate("/profile");
+            navigate("/");
           } else {
             setError(`Failed to login: ${res.status} ${res.statusText}`);
           }

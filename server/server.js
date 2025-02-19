@@ -16,16 +16,18 @@ const PORT = process.env.PORT || 5000;
 const mongoClient = new MongoClient(process.env.MONGODB_URL);
 
 mongoClient.connect().then(() => {
-  console.log("Connected do mongodb");
-  app.use("/api/posts", PostsApi(mongoClient.db("social-media")));
+  console.log("Connected to MongoDB");
+  const db = mongoClient.db("social-media");
+
+  // Pass the database instance to the APIs
+  app.use("/api/posts", PostsApi(db));
+  app.use("/api/login", loginApi(db));
 });
 
 app.use(express.static("../client/dist"));
 app.use(bodyParser.json());
 
-app.use("/api", loginApi);
-
-//must haves
+// Must haves
 app.use((req, res, next) => {
   if (req.method === "GET" && !req.path.startsWith("/api")) {
     return res.sendFile(path.resolve("../client/dist/index.html"));
