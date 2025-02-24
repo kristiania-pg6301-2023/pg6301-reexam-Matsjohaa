@@ -17,7 +17,8 @@ export const PostForm = () => {
         }
 
         const userInfo = await response.json();
-        setLoggedInUser(userInfo.username);
+        // Assuming the response contains a 'name' field instead of 'username'
+        setLoggedInUser(userInfo.name || userInfo.email); // Use 'name' or 'email' as the identifier
       } catch (err) {
         console.error("Failed to fetch logged-in user:", err);
         setLoggedInUser(null);
@@ -28,7 +29,6 @@ export const PostForm = () => {
 
     checkLoggedInUser();
   }, []);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -73,14 +73,12 @@ export const PostForm = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <a>"2helloo"</a>
-      <p>fadf</p>
       <textarea
         value={content}
         onChange={(e) => setContent(e.target.value)}
         placeholder="Write your post (10-1000 characters)"
       />
-      <button type="submit">heya</button>
+      <button type="submit">Post</button>
     </form>
   );
 };

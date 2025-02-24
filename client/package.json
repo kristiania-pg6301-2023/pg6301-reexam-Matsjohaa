@@ -4,8 +4,8 @@
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "parcel watch index.html"
-  },
+    "dev": "parcel watch index.html",
+    "clean": "powershell -Command \"Remove-Item -Recurse -Force -ErrorAction SilentlyContinue node_modules; Remove-Item -Recurse -Force -ErrorAction SilentlyContinue dist; Remove-Item -Recurse -Force -ErrorAction SilentlyContinue .parcel-cache; npm cache clean --force\" && npm install"  },
   "author": "",
   "license": "ISC",
   "devDependencies": {
