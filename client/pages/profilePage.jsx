@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { fetchJSON } from "../utils/json";
 import { Link } from "react-router-dom";
+import { Navbar } from "../components/navBar";
 
 export const Profile = () => {
   const [data, setData] = useState(null);
@@ -32,7 +33,7 @@ export const Profile = () => {
 
   return (
     <div>
-      <Link to="/">Home</Link>
+      <Navbar />
       <h1>
         Profile for {data.name} ({data.email})
       </h1>

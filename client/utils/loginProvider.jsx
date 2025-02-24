@@ -1,29 +1,17 @@
-import React, { createContext, useState } from "react";
+export const checkLoggedInUser = async () => {
+  try {
+    const response = await fetch("/api/login", {
+      credentials: "include", // Include cookies in the request
+    });
 
-export const LoginContext = createContext();
+    if (!response.ok) {
+      throw new Error("Failed to fetch user info");
+    }
 
-export const LoginProvider = ({ children }) => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Track login state
-  const [userData, setUserData] = useState(null); // Track user data
-
-  // Function to handle login
-  const login = (data) => {
-    setIsLoggedIn(true);
-    setUserData(data); // Set user data when logging in
-  };
-
-  // Function to handle logout
-  const logout = () => {
-    setIsLoggedIn(false);
-    setUserData(null); // Clear user data when logging out
-    // Clear the access token cookie or local storage if needed
-    document.cookie =
-      "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-  };
-
-  return (
-    <LoginContext.Provider value={{ isLoggedIn, userData, login, logout }}>
-      {children}
-    </LoginContext.Provider>
-  );
+    const userInfo = await response.json();
+    return userInfo.email; // Assuming the user info contains an email field
+  } catch (err) {
+    console.error("Failed to fetch logged-in user:", err);
+    return null; // Return null if there's an error or no user is logged in
+  }
 };

@@ -1,17 +1,30 @@
 import { Router } from "express";
 import { ObjectId } from "mongodb";
-import { isAuthenticated, isGitHubUser } from "../controller/middleware.js";
 
 export const PostsApi = (db) => {
   const router = Router();
   const postsCollection = db.collection("posts");
 
-  // Create a new post (open to everyone)
-  router.post("/", async (req, res) => {
-    console.log("Received request body:", req.body); // Debugging log
+  // Fetch all posts
+  router.get("/", async (req, res) => {
+    try {
+      const posts = await postsCollection.find().toArray();
+      res.json(posts);
+    } catch (err) {
+      console.error("Failed to fetch posts:", err);
+      res.status(500).json({ error: "Failed to fetch posts" });
+    }
+  });
 
-    const { content } = req.body;
-    const author = req.cookies?.username || "Anonymous";
+  // Create a new post
+  router.post("/", async (req, res) => {
+    const { content, username } = req.body; // Get username from request body
+
+    if (!username) {
+      return res
+        .status(401)
+        .json({ error: "You must be logged in to create a post." });
+    }
 
     if (!content || content.length < 10 || content.length > 1000) {
       return res
@@ -21,7 +34,7 @@ export const PostsApi = (db) => {
 
     const post = {
       content,
-      author,
+      author: username, // Use username from request body
       createdAt: new Date(),
       updatedAt: new Date(),
       reactions: [],
@@ -29,48 +42,109 @@ export const PostsApi = (db) => {
 
     try {
       const result = await postsCollection.insertOne(post);
-      res.status(201).json({ id: result.insertedId, ...post });
+      res.status(201).json({ _id: result.insertedId, ...post });
     } catch (err) {
       console.error("Failed to insert post:", err);
       res.status(500).json({ error: "Failed to create post" });
     }
   });
 
-  // Edit a post (only GitHub users and the author)
-  router.put("/:id", isAuthenticated, isGitHubUser, async (req, res) => {
-    const { id } = req.params;
+  router.post("/:postId/react", async (req, res) => {
+    const { postId } = req.params;
+    const { emoji, username } = req.body;
+
+    // Ensure the user is logged in, using session or token-based authentication
+    if (!username) {
+      return res.status(401).json({ error: "You must be logged in to react" });
+    }
+
+    try {
+      const post = await postsCollection.findOne({ _id: new ObjectId(postId) });
+      if (!post) return res.status(404).json({ error: "Post not found" });
+
+      // Ensure the user hasn't already reacted
+      if (post.reactions.includes(`${username}:${emoji}`)) {
+        return res
+          .status(400)
+          .json({ error: "You have already reacted with this emoji" });
+      }
+
+      // Add the reaction
+      await postsCollection.updateOne(
+        { _id: new ObjectId(postId) },
+        { $push: { reactions: `${username}:${emoji}` } },
+      );
+
+      res.status(200).json({ message: "Reaction added successfully" });
+    } catch (err) {
+      console.error("Failed to react to post:", err);
+      res.status(500).json({ error: "Failed to react to post" });
+    }
+  });
+
+  // Edit a post
+  router.put("/:postId", async (req, res) => {
+    const { postId } = req.params;
     const { content } = req.body;
-    const author = req.cookies?.username; // Get username from cookies
+    const username = req.cookies?.username;
 
-    if (!content || content.length < 10 || content.length > 1000) {
+    if (!username) {
       return res
-        .status(400)
-        .json({ error: "Post content must be between 10 and 1000 characters" });
+        .status(401)
+        .json({ error: "You must be logged in to edit a post" });
     }
 
-    const post = await postsCollection.findOne({ _id: new ObjectId(id) });
+    try {
+      const post = await postsCollection.findOne({ _id: new ObjectId(postId) });
+      if (!post) return res.status(404).json({ error: "Post not found" });
 
-    if (!post) {
-      return res.status(404).json({ error: "Post not found" });
+      // Only the author can edit the post
+      if (post.author !== username) {
+        return res
+          .status(403)
+          .json({ error: "You are not authorized to edit this post" });
+      }
+
+      await postsCollection.updateOne(
+        { _id: new ObjectId(postId) },
+        { $set: { content, updatedAt: new Date() } },
+      );
+
+      res.status(200).json({ message: "Post updated successfully" });
+    } catch (err) {
+      console.error("Failed to edit post:", err);
+      res.status(500).json({ error: "Failed to edit post" });
     }
+  });
 
-    if (!author || post.author !== author) {
+  // Delete a post
+  router.delete("/:postId", async (req, res) => {
+    const { postId } = req.params;
+    const username = req.cookies?.username;
+
+    if (!username) {
       return res
-        .status(403)
-        .json({ error: "You are not authorized to edit this post" });
+        .status(401)
+        .json({ error: "You must be logged in to delete a post" });
     }
 
-    const updatedPost = {
-      ...post,
-      content,
-      updatedAt: new Date(),
-    };
+    try {
+      const post = await postsCollection.findOne({ _id: new ObjectId(postId) });
+      if (!post) return res.status(404).json({ error: "Post not found" });
 
-    await postsCollection.updateOne(
-      { _id: new ObjectId(id) },
-      { $set: updatedPost },
-    );
-    res.status(200).json(updatedPost);
+      // Only the author can delete the post
+      if (post.author !== username) {
+        return res
+          .status(403)
+          .json({ error: "You are not authorized to delete this post" });
+      }
+
+      await postsCollection.deleteOne({ _id: new ObjectId(postId) });
+      res.status(200).json({ message: "Post deleted successfully" });
+    } catch (err) {
+      console.error("Failed to delete post:", err);
+      res.status(500).json({ error: "Failed to delete post" });
+    }
   });
 
   return router;
