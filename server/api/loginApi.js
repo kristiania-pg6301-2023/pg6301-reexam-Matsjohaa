@@ -59,7 +59,7 @@ export const loginApi = (db) => {
           });
         }
 
-        return res.json(googleUser);
+        return res.json({ ...googleUser, provider: "google" });
       }
 
       // If Google user info fails, try fetching GitHub user info
@@ -102,6 +102,7 @@ export const loginApi = (db) => {
         email:
           githubUser.email || `${githubUser.login}@users.noreply.github.com`,
         picture: githubUser.avatar_url,
+        provider: "github",
       });
     } catch (err) {
       console.error("Error fetching user info:", err);

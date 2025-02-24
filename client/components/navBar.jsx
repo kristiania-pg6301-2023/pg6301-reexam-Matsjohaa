@@ -1,10 +1,11 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { fetchJSON } from "../utils/json";
 import "../css/navbar.css";
 
 export const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userProvider, setUserProvider] = useState(null); // Track the user's provider
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -13,9 +14,11 @@ export const Navbar = () => {
         const userInfo = await fetchJSON("/api/login");
         if (userInfo && userInfo.email) {
           setIsLoggedIn(true);
+          setUserProvider(userInfo.provider); // Set the user's provider
         }
       } catch (err) {
         setIsLoggedIn(false);
+        setUserProvider(null);
       }
     };
 
@@ -27,7 +30,15 @@ export const Navbar = () => {
       await fetch("/api/login", {
         method: "DELETE",
       });
+
+      // Clear user data from local storage
+      localStorage.removeItem("userData");
+
+      // Update state
       setIsLoggedIn(false);
+      setUserProvider(null);
+
+      // Redirect to home page
       navigate("/");
     } catch (err) {
       console.error("Failed to logout:", err);
@@ -36,9 +47,10 @@ export const Navbar = () => {
 
   return (
     <nav>
-      <a>Welcome to social media app!</a>
+      <Link to="/">Home</Link>
       {isLoggedIn ? (
         <>
+          {userProvider === "github" && <Link to="/post">Post</Link>}
           <Link to="/profile">Profile</Link>
           <button onClick={handleLogout}>Logout</button>
         </>

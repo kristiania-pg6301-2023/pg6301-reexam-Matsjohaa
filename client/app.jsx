@@ -6,6 +6,7 @@ import { LoginCallBack } from "./pages/loginCallBack";
 import { Profile } from "./pages/profilePage";
 import { useLoader } from "./utils/hooks";
 import { fetchJSON } from "./utils/json";
+import { PostPage } from "./pages/postPage";
 
 export const LoginContext = React.createContext({});
 //
@@ -25,6 +26,8 @@ export function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/login/callback" element={<LoginCallBack />} />
           <Route path="/profile" element={<Profile />} />
+
+          <Route path="/post" element={<PostPage />} />
         </Routes>
       </BrowserRouter>
     </LoginContext.Provider>

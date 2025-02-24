@@ -5,9 +5,7 @@ import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import { MongoClient } from "mongodb";
 import { PostsApi } from "./api/postsApi.js";
-import { fetchJSON } from "./utils/jsonUtils.js";
 import { loginApi } from "./api/loginApi.js";
-import fetch from "node-fetch";
 
 dotenv.config();
 const app = express();
@@ -15,17 +13,19 @@ const PORT = process.env.PORT || 5000;
 
 const mongoClient = new MongoClient(process.env.MONGODB_URL);
 
+// Middleware to parse JSON and URL-encoded bodies
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
 mongoClient.connect().then(() => {
   console.log("Connected to MongoDB");
   const db = mongoClient.db("social-media");
 
-  // Pass the database instance to the APIs
   app.use("/api/posts", PostsApi(db));
   app.use("/api/login", loginApi(db));
 });
 
 app.use(express.static("../client/dist"));
-app.use(bodyParser.json());
 
 // Must haves
 app.use((req, res, next) => {
