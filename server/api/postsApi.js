@@ -5,17 +5,19 @@ export const PostsApi = (db) => {
   const router = Router();
   const postsCollection = db.collection("posts");
 
-  // Fetch all posts
   router.get("/", async (req, res) => {
     try {
-      const posts = await postsCollection.find().toArray();
+      // Fetch posts sorted by createdAt in descending order (newest first)
+      const posts = await postsCollection
+        .find()
+        .sort({ createdAt: -1 }) // Sort by createdAt in descending order
+        .toArray();
       res.json(posts);
     } catch (err) {
       console.error("Failed to fetch posts:", err);
       res.status(500).json({ error: "Failed to fetch posts" });
     }
   });
-
   // Create a new post
   router.post("/", async (req, res) => {
     const { content, username } = req.body; // Get username from request body
