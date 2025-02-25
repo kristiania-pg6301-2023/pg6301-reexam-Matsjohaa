@@ -5,9 +5,9 @@
 * [x] En bruker som er logget inn kan se på sin profilside
 * [x] Brukere skal forbli logget inn når de refresher websiden
 * [ ] en bruker som er logget inn kan klikke på et innlegg for hvem som har reagert på innlegget og kommentarer. Detaljene skal inkludere en overskrift, tekst, navn og bilde (om tilgjengelig) på den som publiserte den
-* [ ] Brukere kan publisere nye innlegg. Innlegg skal være mellom 10 ord og 1000 tegn
+* [x] Brukere kan publisere nye innlegg. Innlegg skal være mellom 10 ord og 1000 tegn
 * [ ] systemet hindrer en bruker fra å publisere mer enn 5 innlegg innefor en time
-* [ ] brukeren skal forhindres å sende inn en nyhetsatikkel som mangler tekst (?)
+* [x] brukeren skal forhindres å sende inn en nyhetsatikkel som mangler tekst (?)
 * [ ] en bruker skal kunne redigere et innleg de selv har publisert
 * [ ] en bruker skal kunne slette et innlegg de selv har publisert
 * [ ] brukere skal reakere på andres innlegg med en av flere emojis

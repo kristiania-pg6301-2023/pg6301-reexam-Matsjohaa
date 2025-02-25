@@ -34,7 +34,7 @@ export const PostList = () => {
       }
 
       const userInfo = await response.json();
-      setLoggedInUser(userInfo.email); // Assuming the user info contains an email field
+      setLoggedInUser(userInfo.name || userInfo.login); // Use the username or login (for GitHub)
     } catch (err) {
       console.error("Failed to fetch logged-in user:", err);
       setLoggedInUser(null); // Set to null if there's an error or no user is logged in
@@ -55,7 +55,7 @@ export const PostList = () => {
         },
         body: JSON.stringify({
           emoji,
-          username: loggedInUser, // Pass the logged-in user info
+          username: loggedInUser, // Pass the logged-in username
         }),
         credentials: "include",
       });
@@ -90,6 +90,7 @@ export const PostList = () => {
             borderRadius: "8px",
           }}
         >
+          <h3>{post.title}</h3> {/* Display the title */}
           <p>{post.content}</p>
           <p>
             <strong>Author:</strong> {post.author}
@@ -97,7 +98,6 @@ export const PostList = () => {
           <p>
             <strong>Reactions:</strong> {post.reactions.join(" ")}
           </p>
-
           {/* Reaction buttons for logged-in users */}
           {loggedInUser && (
             <div>

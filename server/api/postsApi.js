@@ -20,7 +20,7 @@ export const PostsApi = (db) => {
   });
   // Create a new post
   router.post("/", async (req, res) => {
-    const { content, username } = req.body; // Get username from request body
+    const { title, content, username } = req.body; // Get title, content, and username from request body
 
     if (!username) {
       return res
@@ -28,6 +28,14 @@ export const PostsApi = (db) => {
         .json({ error: "You must be logged in to create a post." });
     }
 
+    // Validate title
+    if (!title || title.length < 5 || title.length > 100) {
+      return res
+        .status(400)
+        .json({ error: "Title must be between 5 and 100 characters" });
+    }
+
+    // Validate content
     if (!content || content.length < 10 || content.length > 1000) {
       return res
         .status(400)
@@ -35,6 +43,7 @@ export const PostsApi = (db) => {
     }
 
     const post = {
+      title, // Include title in the post object
       content,
       author: username, // Use username from request body
       createdAt: new Date(),
