@@ -1,5 +1,8 @@
 github-classroom link: https://github.com/kristiania-pg6301-2023/pg6301-reexam-Matsjohaa
 deployment link: 
+siden jeg ble ferdig med bacheloren min ifjor, og tar opp dette faget for å forbedre karakteren min, så har jeg ikke lenger github sudent developer pack gratis, og får heller ikke gratis credits på heoku. jeg prøvde å søke på å fornye pakken, men ble rejected to ganger:
+![image](https://github.com/user-attachments/assets/02148630-c3e0-4157-9e23-bcbc0c7dbc7e)
+
 
 siden oppgaven hadde som krav å ha tre roller, valgte jeg å løse det sånn her:
 - gjester kan se innlegg og reaksjoner
