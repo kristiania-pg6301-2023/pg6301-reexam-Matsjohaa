@@ -1,15 +1,15 @@
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react"; // Import useNavigate
+import { useState, useEffect } from "react";
+import { useLoggedInUser } from "../utils/loginProvider";
 
 export const PostList = () => {
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
   const [posts, setPosts] = useState([]);
-  const [loggedInUser, setLoggedInUser] = useState(null);
+  const { loggedInUser } = useLoggedInUser(); // Use the custom hook
 
-  // Fetch posts and check if the user is logged in
+  // Fetch posts
   useEffect(() => {
     fetchPosts();
-    checkLoggedInUser();
   }, []);
 
   const fetchPosts = async () => {
@@ -23,23 +23,36 @@ export const PostList = () => {
     }
   };
 
-  const checkLoggedInUser = async () => {
+  const handleReact = async (postId, emoji) => {
+    if (!loggedInUser) {
+      alert("You must be logged in to react to posts.");
+      return;
+    }
+
     try {
-      const response = await fetch("/api/login", {
+      const response = await fetch(`/api/posts/${postId}/react`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          emoji,
+          username: loggedInUser,
+        }),
         credentials: "include",
       });
 
       if (!response.ok) {
-        throw new Error("Failed to fetch user info");
+        throw new Error("Failed to react to post");
       }
 
-      const userInfo = await response.json();
-      setLoggedInUser(userInfo.name || userInfo.login); // Update state
-      return userInfo; // Return user info
+      const data = await response.json();
+      console.log("Reaction added:", data);
+      fetchPosts(); // Refresh the posts after reacting
+      alert("Reaction added!");
     } catch (err) {
-      console.error("Failed to fetch logged-in user:", err);
-      setLoggedInUser(null); // Update state
-      return null; // Return null if there's an error
+      console.error("Failed to react to post:", err);
+      alert("Failed to react to post. Please try again.");
     }
   };
 
@@ -49,9 +62,7 @@ export const PostList = () => {
     );
     if (!confirmDelete) return;
 
-    // Check if the user is logged in
-    const userInfo = await checkLoggedInUser();
-    if (!userInfo) {
+    if (!loggedInUser) {
       alert("You must be logged in to delete a post.");
       return;
     }
@@ -62,7 +73,7 @@ export const PostList = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username: userInfo.name || userInfo.login }), // Send the username in the request body
+        body: JSON.stringify({ username: loggedInUser }), // Send the username in the request body
         credentials: "include", // Include cookies if needed for other purposes
       });
 

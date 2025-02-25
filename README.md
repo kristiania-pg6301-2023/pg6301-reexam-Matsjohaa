@@ -1,15 +1,24 @@
+github-classroom link: https://github.com/kristiania-pg6301-2023/pg6301-reexam-Matsjohaa
+deployment link: 
+
+siden oppgaven hadde som krav å ha tre roller, valgte jeg å løse det sånn her:
+- gjester kan se innlegg og reaksjoner
+- google-brukere kan se innlegg + reagere på innlegg
+- github-brukere kan legge ut innlegg + reagere på innlegg
+
+
 
 ## Funksonelle krav:
-* [ ] Anonyme brukere skal se de siste innleggene og reaksjoner (emojis) når de kommer til nettsiden (lag noen eksempelinnlegg for å demonstrere)
+* [x] Anonyme brukere skal se de siste innleggene og reaksjoner (emojis) når de kommer til nettsiden (lag noen eksempelinnlegg for å demonstrere)
 * [x] Brukere kan logge seg inn. Du kan velge brukere skal kunne registrere seg med brukere skal logge inn med Google eller Entra ID
 * [x] En bruker som er logget inn kan se på sin profilside
 * [x] Brukere skal forbli logget inn når de refresher websiden
 * [ ] en bruker som er logget inn kan klikke på et innlegg for hvem som har reagert på innlegget og kommentarer. Detaljene skal inkludere en overskrift, tekst, navn og bilde (om tilgjengelig) på den som publiserte den
-* [x] Brukere kan publisere nye innlegg. Innlegg skal være mellom 10 ord og 1000 tegn
+* [x] Brukere kan publisere nye innlegg. Innlegg skal være mellom 10 ord og 1000 tegn (regnet med at mener mellom 10 og 1000 tegn, og ikke ord. )
 * [ ] systemet hindrer en bruker fra å publisere mer enn 5 innlegg innefor en time
-* [x] brukeren skal forhindres å sende inn en nyhetsatikkel som mangler tekst (?)
-* [ ] en bruker skal kunne redigere et innleg de selv har publisert
-* [ ] en bruker skal kunne slette et innlegg de selv har publisert
+* [x] brukeren skal forhindres å sende inn en nyhetsatikkel som mangler tekst (tolker som at du mener innlegg)
+* [x] en bruker skal kunne redigere et innleg de selv har publisert
+* [x] en bruker skal kunne slette et innlegg de selv har publisert
 * [ ] brukere skal reakere på andres innlegg med en av flere emojis
 * [ ] valgfritt: brukere kan legge til kommentarer til andres innlegg
 * [ ] valgfritt Brukere kan legge til andre som venner

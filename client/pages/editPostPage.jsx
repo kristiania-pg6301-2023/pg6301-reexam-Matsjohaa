@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Navbar } from "../components/navBar";
+import { useState, useEffect } from "react";
+import { useLoggedInUser } from "../utils/loginProvider";
 
 export const EditPostPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { post } = location.state || {}; // Get the post data from the state
-
   const [title, setTitle] = useState(post?.title || "");
   const [content, setContent] = useState(post?.content || "");
+  const { loggedInUser } = useLoggedInUser(); // Use the custom hook
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!title || !content) {
-      alert("Title and content are required.");
+    if (!loggedInUser) {
+      alert("You must be logged in to edit a post.");
       return;
     }
 
@@ -24,7 +24,11 @@ export const EditPostPage = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ title, content }),
+        body: JSON.stringify({
+          title,
+          content,
+          username: loggedInUser, // Pass the logged-in user
+        }),
         credentials: "include",
       });
 
@@ -42,13 +46,11 @@ export const EditPostPage = () => {
 
   return (
     <div>
-      <Navbar />
-      <h1>Edit Post</h1>
+      <h2>Edit Post</h2>
       <form onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="title">Title</label>
+          <label>Title:</label>
           <input
-            id="title"
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
@@ -56,9 +58,8 @@ export const EditPostPage = () => {
           />
         </div>
         <div>
-          <label htmlFor="content">Content</label>
+          <label>Content:</label>
           <textarea
-            id="content"
             value={content}
             onChange={(e) => setContent(e.target.value)}
             required

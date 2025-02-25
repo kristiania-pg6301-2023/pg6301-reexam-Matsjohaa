@@ -1,34 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { useLoggedInUser } from "../utils/loginProvider";
 
 export const PostForm = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [loggedInUser, setLoggedInUser] = useState(null);
-  const [loadingUser, setLoadingUser] = useState(true);
-
-  useEffect(() => {
-    const checkLoggedInUser = async () => {
-      try {
-        const response = await fetch("/api/login", {
-          credentials: "include",
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch user info");
-        }
-
-        const userInfo = await response.json();
-        setLoggedInUser(userInfo.name || userInfo.email); // Use 'name' or 'email' as the identifier
-      } catch (err) {
-        console.error("Failed to fetch logged-in user:", err);
-        setLoggedInUser(null);
-      } finally {
-        setLoadingUser(false);
-      }
-    };
-
-    checkLoggedInUser();
-  }, []);
+  const { loggedInUser, loadingUser } = useLoggedInUser(); // Use the custom hook
 
   const handleSubmit = async (e) => {
     e.preventDefault();

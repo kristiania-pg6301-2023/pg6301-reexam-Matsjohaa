@@ -96,8 +96,7 @@ export const PostsApi = (db) => {
   // Edit a post
   router.put("/:postId", async (req, res) => {
     const { postId } = req.params;
-    const { content } = req.body;
-    const username = req.cookies?.username;
+    const { title, content, username } = req.body; // Get username from the request body
 
     if (!username) {
       return res
@@ -118,7 +117,7 @@ export const PostsApi = (db) => {
 
       await postsCollection.updateOne(
         { _id: new ObjectId(postId) },
-        { $set: { content, updatedAt: new Date() } },
+        { $set: { title, content, updatedAt: new Date() } }, // Update title and content
       );
 
       res.status(200).json({ message: "Post updated successfully" });

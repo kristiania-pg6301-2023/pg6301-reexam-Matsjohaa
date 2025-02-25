@@ -1,17 +1,32 @@
-export const checkLoggedInUser = async () => {
-  try {
-    const response = await fetch("/api/login", {
-      credentials: "include", // Include cookies in the request
-    });
+import { useState, useEffect } from "react";
 
-    if (!response.ok) {
-      throw new Error("Failed to fetch user info");
-    }
+export const useLoggedInUser = () => {
+  const [loggedInUser, setLoggedInUser] = useState(null);
+  const [loadingUser, setLoadingUser] = useState(true);
 
-    const userInfo = await response.json();
-    return userInfo.email; // Assuming the user info contains an email field
-  } catch (err) {
-    console.error("Failed to fetch logged-in user:", err);
-    return null; // Return null if there's an error or no user is logged in
-  }
+  useEffect(() => {
+    const checkLoggedInUser = async () => {
+      try {
+        const response = await fetch("/api/login", {
+          credentials: "include",
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch user info");
+        }
+
+        const userInfo = await response.json();
+        setLoggedInUser(userInfo.name || userInfo.email); // Use 'name' or 'email' as the identifier
+      } catch (err) {
+        console.error("Failed to fetch logged-in user:", err);
+        setLoggedInUser(null);
+      } finally {
+        setLoadingUser(false);
+      }
+    };
+
+    checkLoggedInUser();
+  }, []);
+
+  return { loggedInUser, loadingUser };
 };
