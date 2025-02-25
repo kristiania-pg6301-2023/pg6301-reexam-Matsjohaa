@@ -131,7 +131,7 @@ export const PostsApi = (db) => {
   // Delete a post
   router.delete("/:postId", async (req, res) => {
     const { postId } = req.params;
-    const username = req.cookies?.username;
+    const { username } = req.body; // Get username from the request body
 
     if (!username) {
       return res

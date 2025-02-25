@@ -1,14 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { checkLoggedInUser } from "../utils/loginProvider"; // Assuming this function correctly retrieves user info
+import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react"; // Import useNavigate
 
 export const PostList = () => {
+  const navigate = useNavigate(); // Initialize useNavigate
   const [posts, setPosts] = useState([]);
   const [loggedInUser, setLoggedInUser] = useState(null);
 
   // Fetch posts and check if the user is logged in
   useEffect(() => {
     fetchPosts();
-    checkLoggedInUser(); // Updates loggedInUser state
+    checkLoggedInUser();
   }, []);
 
   const fetchPosts = async () => {
@@ -22,11 +23,10 @@ export const PostList = () => {
     }
   };
 
-  // Update logged-in user information
   const checkLoggedInUser = async () => {
     try {
       const response = await fetch("/api/login", {
-        credentials: "include", // Include cookies in the request
+        credentials: "include",
       });
 
       if (!response.ok) {
@@ -34,42 +34,47 @@ export const PostList = () => {
       }
 
       const userInfo = await response.json();
-      setLoggedInUser(userInfo.name || userInfo.login); // Use the username or login (for GitHub)
+      setLoggedInUser(userInfo.name || userInfo.login); // Update state
+      return userInfo; // Return user info
     } catch (err) {
       console.error("Failed to fetch logged-in user:", err);
-      setLoggedInUser(null); // Set to null if there's an error or no user is logged in
+      setLoggedInUser(null); // Update state
+      return null; // Return null if there's an error
     }
   };
 
-  const handleReact = async (postId, emoji) => {
-    if (!loggedInUser) {
-      alert("You must be logged in to react to posts.");
+  const handleDelete = async (postId) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this post?",
+    );
+    if (!confirmDelete) return;
+
+    // Check if the user is logged in
+    const userInfo = await checkLoggedInUser();
+    if (!userInfo) {
+      alert("You must be logged in to delete a post.");
       return;
     }
 
     try {
-      const response = await fetch(`/api/posts/${postId}/react`, {
-        method: "POST",
+      const response = await fetch(`/api/posts/${postId}`, {
+        method: "DELETE",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          emoji,
-          username: loggedInUser, // Pass the logged-in username
-        }),
-        credentials: "include",
+        body: JSON.stringify({ username: userInfo.name || userInfo.login }), // Send the username in the request body
+        credentials: "include", // Include cookies if needed for other purposes
       });
 
       if (!response.ok) {
-        throw new Error("Failed to react to post");
+        throw new Error("Failed to delete post");
       }
 
-      const data = await response.json();
-      console.log("Reaction added:", data);
-      alert("Reaction added!");
+      fetchPosts(); // Refresh the posts after deletion
+      alert("Post deleted successfully!");
     } catch (err) {
-      console.error("Failed to react to post:", err);
-      alert("Failed to react to post. Please try again.");
+      console.error("Failed to delete post:", err);
+      alert("Failed to delete post. Please try again.");
     }
   };
 
@@ -90,7 +95,7 @@ export const PostList = () => {
             borderRadius: "8px",
           }}
         >
-          <h3>{post.title}</h3> {/* Display the title */}
+          <h3>{post.title}</h3>
           <p>{post.content}</p>
           <p>
             <strong>Author:</strong> {post.author}
@@ -98,12 +103,23 @@ export const PostList = () => {
           <p>
             <strong>Reactions:</strong> {post.reactions.join(" ")}
           </p>
-          {/* Reaction buttons for logged-in users */}
           {loggedInUser && (
             <div>
               <button onClick={() => handleReact(post._id, "👍")}>👍</button>
               <button onClick={() => handleReact(post._id, "❤️")}>❤️</button>
               <button onClick={() => handleReact(post._id, "😂")}>😂</button>
+            </div>
+          )}
+          {loggedInUser === post.author && (
+            <div>
+              <button
+                onClick={() =>
+                  navigate(`/edit-post/${post._id}`, { state: { post } })
+                }
+              >
+                Edit
+              </button>
+              <button onClick={() => handleDelete(post._id)}>Delete</button>
             </div>
           )}
         </div>
