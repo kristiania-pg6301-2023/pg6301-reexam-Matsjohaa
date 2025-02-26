@@ -1,3 +1,4 @@
+// FrontPage.js
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Navbar } from "../components/navBar";
@@ -6,7 +7,7 @@ import { usePostActions } from "../utils/usePostActions"; // Import the shared l
 
 export const FrontPage = () => {
   const navigate = useNavigate();
-  const { posts, handleReact, handleDelete } = usePostActions(); // Use the shared logic
+  const { posts, handleReact, handleDelete } = usePostActions(); // Fetch all posts
 
   return (
     <>

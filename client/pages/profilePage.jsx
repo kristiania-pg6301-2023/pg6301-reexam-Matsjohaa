@@ -1,13 +1,18 @@
+// Profile.js
 import { useNavigate } from "react-router-dom";
 import { Post } from "../components/Post";
 import { usePostActions } from "../utils/usePostActions";
 import { Navbar } from "../components/navBar";
 import { useEffect, useState } from "react";
 import { fetchJSON } from "../utils/json";
+import { useLoggedInUser } from "../utils/loginProvider";
 
 export const Profile = () => {
   const navigate = useNavigate();
-  const { posts, handleReact, handleDelete } = usePostActions();
+  const { loggedInUser } = useLoggedInUser();
+  const { posts, handleReact, handleDelete, handleEdit } = usePostActions(
+    loggedInUser?.name,
+  ); // Fetch user's posts
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -59,6 +64,7 @@ export const Profile = () => {
               post={post}
               onDelete={handleDelete}
               onReact={handleReact}
+              onEdit={(updatedPost) => handleEdit(post._id, updatedPost)}
             />
           ))}
         </div>

@@ -1,10 +1,15 @@
+// components/Post.js
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useLoggedInUser } from "../utils/loginProvider";
 
-export const Post = ({ post, onDelete, onReact }) => {
+export const Post = ({ post, onDelete, onReact, onEdit }) => {
   const navigate = useNavigate();
   const { loggedInUser } = useLoggedInUser();
+
+  const handleEditClick = () => {
+    navigate(`/edit-post/${post._id}`, { state: { post } });
+  };
 
   return (
     <div
@@ -12,6 +17,7 @@ export const Post = ({ post, onDelete, onReact }) => {
         border: "1px solid #ccc",
         padding: "16px",
         borderRadius: "8px",
+        position: "relative", // For positioning the comment button
       }}
     >
       <h3>{post.title}</h3>
@@ -31,18 +37,24 @@ export const Post = ({ post, onDelete, onReact }) => {
           <button onClick={() => onReact(post._id, "🎉")}>🎉</button>
         </div>
       )}
-      {loggedInUser === post.author && (
+      {loggedInUser && loggedInUser.name === post.author && (
         <div>
-          <button
-            onClick={() =>
-              navigate(`/edit-post/${post._id}`, { state: { post } })
-            }
-          >
-            Edit
-          </button>
+          <button onClick={handleEditClick}>Edit</button>
           <button onClick={() => onDelete(post._id)}>Delete</button>
         </div>
       )}
+
+      {/* Comment Button */}
+      <button
+        style={{
+          position: "absolute",
+          bottom: "16px",
+          right: "16px",
+        }}
+        onClick={() => navigate(`/post/${post._id}`)} // Navigate to the post details page
+      >
+        Comments
+      </button>
     </div>
   );
 };

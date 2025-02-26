@@ -1,47 +1,20 @@
-import { useNavigate, useLocation } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { useLoggedInUser } from "../utils/loginProvider";
+import React, { useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { usePostActions } from "../utils/usePostActions";
 
 export const EditPostPage = () => {
-  const navigate = useNavigate();
   const location = useLocation();
-  const { post } = location.state || {}; // Get the post data from the state
-  const [title, setTitle] = useState(post?.title || "");
-  const [content, setContent] = useState(post?.content || "");
-  const { loggedInUser } = useLoggedInUser(); // Use the custom hook
+  const navigate = useNavigate();
+  const { post } = location.state; // Get the post from the route state
+  const { handleEdit } = usePostActions();
+
+  const [title, setTitle] = useState(post.title);
+  const [content, setContent] = useState(post.content);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    if (!loggedInUser) {
-      alert("You must be logged in to edit a post.");
-      return;
-    }
-
-    try {
-      const response = await fetch(`/api/posts/${post._id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          title,
-          content,
-          username: loggedInUser, // Pass the logged-in user
-        }),
-        credentials: "include",
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to update post");
-      }
-
-      alert("Post updated successfully!");
-      navigate("/"); // Redirect to the home page after editing
-    } catch (err) {
-      console.error("Failed to update post:", err);
-      alert("Failed to update post. Please try again.");
-    }
+    await handleEdit(post._id, { title, content });
+    navigate("/"); // Navigate back to the home page after editing
   };
 
   return (
@@ -49,20 +22,18 @@ export const EditPostPage = () => {
       <h2>Edit Post</h2>
       <form onSubmit={handleSubmit}>
         <div>
-          <label>Title:</label>
+          <label>Title</label>
           <input
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            required
           />
         </div>
         <div>
-          <label>Content:</label>
+          <label>Content</label>
           <textarea
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            required
           />
         </div>
         <button type="submit">Save Changes</button>

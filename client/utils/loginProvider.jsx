@@ -16,7 +16,7 @@ export const useLoggedInUser = () => {
         }
 
         const userInfo = await response.json();
-        setLoggedInUser(userInfo.name || userInfo.email); // Use 'name' or 'email' as the identifier
+        setLoggedInUser(userInfo); // Store the full user object
       } catch (err) {
         console.error("Failed to fetch logged-in user:", err);
         setLoggedInUser(null);

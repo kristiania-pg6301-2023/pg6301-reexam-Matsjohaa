@@ -8,6 +8,7 @@ import { useLoader } from "./utils/hooks";
 import { fetchJSON } from "./utils/json";
 import { PostPage } from "./pages/postPage";
 import { EditPostPage } from "./pages/editPostPage";
+import { PostDetails } from "./pages/PostDetails";
 
 export const LoginContext = React.createContext({});
 //
@@ -29,6 +30,7 @@ export function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/post" element={<PostPage />} />
           <Route path="/edit-post/:postId" element={<EditPostPage />} />
+          <Route path="/post/:postId" element={<PostDetails />} />
         </Routes>
       </BrowserRouter>
     </LoginContext.Provider>

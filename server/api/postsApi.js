@@ -20,10 +20,9 @@ export const PostsApi = (db) => {
 
   router.get("/", async (req, res) => {
     try {
-      // Fetch posts sorted by createdAt in descending order (newest first)
       const posts = await postsCollection
         .find()
-        .sort({ createdAt: -1 }) // Sort by createdAt in descending order
+        .sort({ createdAt: -1 }) // Sort by createdAt in descending order (newest first)
         .toArray();
       res.json(posts);
     } catch (err) {
@@ -127,7 +126,7 @@ export const PostsApi = (db) => {
   // Edit a post
   router.put("/:postId", async (req, res) => {
     const { postId } = req.params;
-    const { title, content, username } = req.body; // Get username from the request body
+    const { title, content, username } = req.body;
 
     if (!username) {
       return res
@@ -148,7 +147,7 @@ export const PostsApi = (db) => {
 
       await postsCollection.updateOne(
         { _id: new ObjectId(postId) },
-        { $set: { title, content, updatedAt: new Date() } }, // Update title and content
+        { $set: { title, content, updatedAt: new Date() } },
       );
 
       res.status(200).json({ message: "Post updated successfully" });
@@ -201,6 +200,60 @@ export const PostsApi = (db) => {
     } catch (err) {
       console.error("Failed to fetch user posts:", err);
       res.status(500).json({ error: "Failed to fetch user posts" });
+    }
+  });
+
+  // Add these routes to your PostsApi router
+
+  // Fetch comments for a post
+  router.get("/:postId/comments", async (req, res) => {
+    const { postId } = req.params;
+
+    try {
+      const post = await db
+        .collection("posts")
+        .findOne({ _id: new ObjectId(postId) });
+      if (!post) return res.status(404).json({ error: "Post not found" });
+
+      const comments = await db
+        .collection("comments")
+        .find({ postId })
+        .sort({ createdAt: -1 })
+        .toArray();
+
+      res.status(200).json({ post, comments });
+    } catch (err) {
+      console.error("Failed to fetch post details:", err);
+      res.status(500).json({ error: "Failed to fetch post details" });
+    }
+  });
+
+  router.post("/:postId/comments", async (req, res) => {
+    const { postId } = req.params;
+    const { author, content, provider } = req.body;
+
+    if (!author || !content) {
+      return res.status(400).json({ error: "Author and content are required" });
+    }
+
+    // Ensure only GitHub users can post comments
+    if (provider !== "github") {
+      return res.status(403).json({ error: "Only GitHub users can comment" });
+    }
+
+    const comment = {
+      postId: new ObjectId(postId),
+      author,
+      content,
+      createdAt: new Date(),
+    };
+
+    try {
+      await db.collection("comments").insertOne(comment);
+      res.status(201).json(comment);
+    } catch (err) {
+      console.error("Failed to add comment:", err);
+      res.status(500).json({ error: "Failed to add comment" });
     }
   });
 
