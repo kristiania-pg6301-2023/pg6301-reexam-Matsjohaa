@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { useLoggedInUser } from "../utils/loginProvider";
+import { useNavigate } from "react-router-dom";
 
 export const PostForm = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const { loggedInUser, loadingUser } = useLoggedInUser(); // Use the custom hook
+  const { loggedInUser, loadingUser } = useLoggedInUser();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,7 +36,7 @@ export const PostForm = () => {
         body: JSON.stringify({
           title,
           content,
-          username: loggedInUser.name, // Send the username as a string
+          username: loggedInUser.name,
         }),
         credentials: "include",
       });
@@ -51,7 +53,8 @@ export const PostForm = () => {
       alert("Post created successfully!");
       setTitle("");
       setContent("");
-      window.location.reload();
+
+      navigate("/");
     } catch (err) {
       console.error("Failed to create post:", err);
       alert("Failed to create post. Please try again.");
@@ -59,11 +62,11 @@ export const PostForm = () => {
   };
 
   if (loadingUser) {
-    return <div>Loading user...</div>;
+    return <div className="loading-message">Loading user...</div>;
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className="post-form" onSubmit={handleSubmit}>
       <input
         type="text"
         value={title}

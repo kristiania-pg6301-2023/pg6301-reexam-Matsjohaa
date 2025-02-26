@@ -1,13 +1,9 @@
 import express from "express";
 import path from "path";
-import cookieParser from "cookie-parser";
-import bodyParser from "body-parser";
 import dotenv from "dotenv";
 import { MongoClient } from "mongodb";
 import { PostsApi } from "./api/postsApi.js";
-import { fetchJSON } from "./utils/jsonUtils.js";
 import { loginApi } from "./api/loginApi.js";
-import fetch from "node-fetch";
 
 dotenv.config();
 const app = express();
@@ -25,9 +21,9 @@ mongoClient.connect().then(() => {
   app.use("/api/login", loginApi(db));
 });
 
+// Must haves
 app.use(express.static("../client/dist"));
 
-// Must haves
 app.use((req, res, next) => {
   if (req.method === "GET" && !req.path.startsWith("/api")) {
     return res.sendFile(path.resolve("../client/dist/index.html"));

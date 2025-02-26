@@ -99,51 +99,57 @@ export const PostDetails = () => {
   if (!post) return <div>Loading...</div>;
 
   return (
-    <div style={{ padding: "16px" }}>
+    <div className="post-details-container">
       <Navbar />
-      <h1>{post.title}</h1>
-      <p>{post.content}</p>
-      <p>
+      <h1 className="post-details-title">{post.title}</h1>
+      <p className="post-details-content">{post.content}</p>
+      <p className="post-details-author">
         <strong>Author:</strong> {post.author}
       </p>
-      <p>
+      <p className="post-details-reactions">
         <strong>Reactions:</strong> {post.reactions.join(" ")}
       </p>
 
-      <h2>Comments</h2>
+      <div className="comments-section">
+        <h2>Comments:</h2>
 
-      {loggedInUser?.provider === "github" && (
-        <div>
-          <textarea
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            placeholder="Add a comment..."
-            style={{ width: "100%", marginBottom: "16px" }}
-          />
-          <button onClick={handleAddComment}>Submit Comment</button>
-        </div>
-      )}
-
-      {post.comments.map((comment) => (
-        <div
-          key={comment._id}
-          style={{ borderBottom: "1px solid #ccc", padding: "8px 0" }}
-        >
-          <p>
-            <strong>{comment.author}</strong> -{" "}
-            {new Date(comment.createdAt).toLocaleString()}
-          </p>
-          <p>{comment.content}</p>
-          {loggedInUser?.name === comment.author && (
+        {loggedInUser?.provider === "github" && (
+          <div>
+            <textarea
+              className="comment-input"
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              placeholder="Add a comment..."
+            />
             <button
-              onClick={() => handleDeleteComment(comment._id)}
-              style={{ color: "red" }}
+              className="comment-submit-button"
+              onClick={handleAddComment}
             >
-              Delete
+              Submit Comment
             </button>
-          )}
-        </div>
-      ))}
+          </div>
+        )}
+
+        {post.comments.map((comment) => (
+          <div key={comment._id} className="comment-item">
+            <p className="comment-author">
+              <strong>{comment.author}</strong> -{" "}
+              <span className="comment-date">
+                {new Date(comment.createdAt).toLocaleString()}
+              </span>
+            </p>
+            <p className="comment-content">{comment.content}</p>
+            {loggedInUser?.name === comment.author && (
+              <button
+                className="comment-delete-button"
+                onClick={() => handleDeleteComment(comment._id)}
+              >
+                Delete
+              </button>
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

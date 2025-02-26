@@ -13,7 +13,6 @@ export const loginApi = (db) => {
   const googleDiscoveryEndpoint =
     "https://accounts.google.com/.well-known/openid-configuration";
 
-  // Endpoint to provide configuration for both Google and GitHub
   router.get("/config", (req, res) => {
     res.json({
       google_client_id: process.env.GOOGLE_CLIENT_ID,
@@ -23,7 +22,6 @@ export const loginApi = (db) => {
     });
   });
 
-  // Endpoint to fetch user info (works for both Google and GitHub)
   router.get("/", async (req, res) => {
     const { access_token } = req.signedCookies;
 
@@ -32,7 +30,6 @@ export const loginApi = (db) => {
     }
 
     try {
-      // Try fetching Google user info first
       const { userinfo_endpoint } = await fetchJSON(googleDiscoveryEndpoint);
       const userinfo = await fetch(userinfo_endpoint, {
         headers: {
@@ -43,13 +40,11 @@ export const loginApi = (db) => {
       if (userinfo.ok) {
         const googleUser = await userinfo.json();
 
-        // Check if the user already exists in the database
         const existingUser = await db.collection("users").findOne({
           email: googleUser.email,
         });
 
         if (!existingUser) {
-          // Insert new user into the database
           await db.collection("users").insertOne({
             name: googleUser.name,
             email: googleUser.email,
@@ -62,7 +57,6 @@ export const loginApi = (db) => {
         return res.json({ ...googleUser, provider: "google" });
       }
 
-      // If Google user info fails, try fetching GitHub user info
       const githubUserInfo = await fetch("https://api.github.com/user", {
         headers: {
           Authorization: `Bearer ${access_token}`,
@@ -79,14 +73,12 @@ export const loginApi = (db) => {
 
       const githubUser = await githubUserInfo.json();
 
-      // Check if the user already exists in the database
       const existingUser = await db.collection("users").findOne({
         email:
           githubUser.email || `${githubUser.login}@users.noreply.github.com`,
       });
 
       if (!existingUser) {
-        // Insert new user into the database
         await db.collection("users").insertOne({
           name: githubUser.name || githubUser.login,
           email:
@@ -110,14 +102,12 @@ export const loginApi = (db) => {
     }
   });
 
-  // Endpoint to handle Google login callback
   router.post("/", (req, res) => {
     const { access_token } = req.body;
     res.cookie("access_token", access_token, { signed: true });
     res.sendStatus(200);
   });
 
-  // Endpoint to handle GitHub login callback
   router.post("/github", async (req, res) => {
     const { code } = req.body;
 
@@ -126,7 +116,6 @@ export const loginApi = (db) => {
     }
 
     try {
-      // Exchange the code for an access token
       const response = await fetch(
         "https://github.com/login/oauth/access_token",
         {
@@ -148,7 +137,6 @@ export const loginApi = (db) => {
         return res.status(400).send(data.error_description);
       }
 
-      // Store the access token in a cookie
       res.cookie("access_token", data.access_token, { signed: true });
       res.sendStatus(200);
     } catch (err) {
@@ -157,7 +145,6 @@ export const loginApi = (db) => {
     }
   });
 
-  // Endpoint to log out
   router.delete("/", (req, res) => {
     res.clearCookie("access_token");
     res.sendStatus(200);

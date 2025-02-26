@@ -15,19 +15,12 @@ export const Post = ({ post, onDelete, onReact, onEdit }) => {
       "Are you sure you want to delete this post?",
     );
     if (confirmDelete) {
-      onDelete(post._id); // Call the onDelete function if the user confirms
+      onDelete(post._id);
     }
   };
 
   return (
-    <div
-      style={{
-        border: "1px solid #ccc",
-        padding: "16px",
-        borderRadius: "8px",
-        position: "relative", // For positioning the comment button
-      }}
-    >
+    <div className="post-container">
       <h3>{post.title}</h3>
       <p>{post.content}</p>
       <p>
@@ -48,19 +41,14 @@ export const Post = ({ post, onDelete, onReact, onEdit }) => {
       {loggedInUser && loggedInUser.name === post.author && (
         <div>
           <button onClick={handleEditClick}>Edit</button>
-          <button onClick={handleDeleteClick}>Delete</button>{" "}
-          {/* Use handleDeleteClick */}
+          <button onClick={handleDeleteClick}>Delete</button>
         </div>
       )}
 
       {/* Comment Button */}
       <button
-        style={{
-          position: "absolute",
-          bottom: "16px",
-          right: "16px",
-        }}
-        onClick={() => navigate(`/post/${post._id}`)} // Navigate to the post details page
+        className="comment-button"
+        onClick={() => navigate(`/post/${post._id}`)}
       >
         Comments
       </button>

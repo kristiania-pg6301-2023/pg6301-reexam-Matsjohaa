@@ -11,19 +11,13 @@ export const FrontPage = () => {
   const { posts, handleReact, handleDelete } = usePostActions(
     null,
     loggedInUser,
-  ); // Pass loggedInUser
+  );
 
   return (
     <>
       <Navbar />
       <h1>Welcome to the Front Page!</h1>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(3, 1fr)",
-          gap: "16px",
-        }}
-      >
+      <div className="posts-grid">
         {posts.map((post) => (
           <Post
             key={post._id}

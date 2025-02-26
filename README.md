@@ -2,15 +2,15 @@ github-classroom link: https://github.com/kristiania-pg6301-2023/pg6301-reexam-M
 
 deployment link: 
 
-siden jeg ble ferdig med bacheloren min ifjor, og tar opp dette faget på siden for å forbedre karakteren min, så har jeg ikke lenger github sudent developer pack gratis, og får heller ikke gratis credits på heoku. jeg prøvde å søke på å fornye pakken, men ble rejected to ganger:
+siden jeg ble ferdig med bacheloren min ifjor, og tar opp dette faget på siden for å forbedre karakteren min, så har jeg ikke lenger github sudent developer pack gratis, og får heller ikke gratis credits på heroku. jeg prøvde å søke på å fornye pakken, men ble rejected to ganger:
 
 ![image](https://github.com/user-attachments/assets/02148630-c3e0-4157-9e23-bcbc0c7dbc7e)
 
 
 siden oppgaven hadde som krav å ha tre roller, valgte jeg å løse det sånn her:
-- gjester kan se innlegg og reaksjoner
-- google-brukere kan se innlegg + reagere på innlegg
-- github-brukere kan legge ut innlegg + reagere på innlegg
+- gjester kan se innlegg, kommentarer og reaksjoner
+- google-brukere kan se innlegg og kommentarer + reagere på innlegg
+- github-brukere kan legge ut innlegg + kommentere på innlegg + reagere på innlegg 
 
 
 
@@ -26,7 +26,7 @@ siden oppgaven hadde som krav å ha tre roller, valgte jeg å løse det sånn he
 * [x] en bruker skal kunne redigere et innleg de selv har publisert
 * [x] en bruker skal kunne slette et innlegg de selv har publisert
 * [x] brukere skal reakere på andres innlegg med en av flere emojis
-* [x] valgfritt: brukere kan legge til kommentarer til andres innlegg
+* [x] valgfritt: brukere kan legge til kommentarer til andres innlegg (+ slette. ikke fikset redigering på kommentarer)
 * [ ] valgfritt Brukere kan legge til andre som venner
 * [x] Alle feil fra serves skal presenters på en pen måte, med mulighet til å prøve igjen
 

@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "start": "concurrently \"node server/server.js\" \"cd frontend && npm start\"",
+    "start": "cd client && npm run clean && cd .. && concurrently npm:dev:client npm:dev:server",
     "dev": "cd client && npm run clean && cd .. && concurrently npm:dev:client npm:dev:server",
     "dev:client": "cd client && npm run dev",
     "dev:server": "cd server && npm run dev",

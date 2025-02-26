@@ -8,13 +8,11 @@ export const LoginCallBack = () => {
   useEffect(() => {
     async function handleLogin() {
       try {
-        // Check if this is a GitHub callback (has `code` in query params)
         const { code } = Object.fromEntries(
           new URLSearchParams(window.location.search),
         );
 
         if (code) {
-          // GitHub OAuth flow
           const res = await fetch("/api/login/github", {
             method: "POST",
             headers: {
@@ -29,7 +27,6 @@ export const LoginCallBack = () => {
             setError(`Failed to login: ${res.status} ${res.statusText}`);
           }
         } else {
-          // Google OAuth flow
           const { access_token } = Object.fromEntries(
             new URLSearchParams(window.location.hash.substring(1)),
           );

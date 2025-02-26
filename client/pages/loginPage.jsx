@@ -67,18 +67,25 @@ export const Login = () => {
   }, []);
 
   if (isAuthenticated === null) {
-    return <div>Loading...</div>;
+    return <div className="login-message">Loading...</div>;
   }
 
   if (isAuthenticated) {
     return (
-      <div>
-        <Link to="/">Home</Link>
-        <h1>You are already logged in!</h1>
-        <p>
-          Please <Link to="/profile">visit your profile</Link> or{" "}
+      <div className="login-container">
+        <Link to="/" className="login-link">
+          Home
+        </Link>
+        <h1 className="login-header">You are already logged in!</h1>
+        <p className="login-message">
+          Please{" "}
+          <Link to="/profile" className="login-link">
+            visit your profile
+          </Link>{" "}
+          or{" "}
           <a
             href="#"
+            className="login-link"
             onClick={() =>
               fetch("/api/login", { method: "DELETE" }).then(() =>
                 window.location.reload(),
@@ -94,14 +101,14 @@ export const Login = () => {
   }
 
   return (
-    <div>
+    <div className="login-container">
       <Navbar />
 
-      <h1>Welcome to the Login Page!</h1>
+      <h1 className="login-header">Welcome to the Login Page!</h1>
       {error ? (
-        <p>{error}</p>
+        <p className="login-error">{error}</p>
       ) : (
-        <div>
+        <div className="login-buttons">
           <a href={googleRedirectUrl}>
             <img src={googleSignInImage} alt="Sign in with Google" />
           </a>

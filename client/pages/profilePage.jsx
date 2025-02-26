@@ -11,7 +11,7 @@ export const Profile = () => {
   const { loggedInUser } = useLoggedInUser();
   const { posts, handleReact, handleDelete, handleEdit } = usePostActions(
     loggedInUser?.name,
-    loggedInUser, // Pass loggedInUser
+    loggedInUser,
   );
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -46,18 +46,12 @@ export const Profile = () => {
         Profile for {user.name} ({user.email})
       </h1>
       <div>
-        <img src={user.picture} alt="Profile" />
+        <img className="profile-picture" src={user.picture} alt="Profile" />
       </div>
 
       <h2>Your Posts</h2>
       {posts.length > 0 ? (
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: "16px",
-          }}
-        >
+        <div className="posts-grid">
           {posts.map((post) => (
             <Post
               key={post._id}

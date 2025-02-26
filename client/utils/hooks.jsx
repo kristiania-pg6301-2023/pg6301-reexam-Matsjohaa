@@ -18,7 +18,7 @@ export function useLoader(fetchFunction) {
     }
 
     loadData();
-  }, [fetchFunction]); // Runs only when `fetchFunction` changes
+  }, [fetchFunction]); // Runs only when fetchFunction changes
 
   return { loading, error, data };
 }

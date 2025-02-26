@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { usePostActions } from "../utils/usePostActions";
-import { useLoggedInUser } from "../utils/loginProvider"; // Import the useLoggedInUser hook
+import { useLoggedInUser } from "../utils/loginProvider";
 
 export const EditPostPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { post } = location.state; // Get the post from the route state
-  const { loggedInUser } = useLoggedInUser(); // Get the logged-in user
-  const { handleEdit } = usePostActions(null, loggedInUser); // Pass loggedInUser to usePostActions
+  const { post } = location.state;
+  const { loggedInUser } = useLoggedInUser();
+  const { handleEdit } = usePostActions(null, loggedInUser);
 
   const [title, setTitle] = useState(post.title);
   const [content, setContent] = useState(post.content);
@@ -16,7 +16,7 @@ export const EditPostPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     await handleEdit(post._id, { title, content });
-    navigate("/"); // Navigate back to the home page after editing
+    navigate("/");
   };
 
   return (

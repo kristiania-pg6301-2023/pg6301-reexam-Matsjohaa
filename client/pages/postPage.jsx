@@ -1,4 +1,3 @@
-// PostPage.js
 import React, { useEffect, useState } from "react";
 import { PostForm } from "../components/PostForm";
 import { fetchJSON } from "../utils/json";
@@ -14,12 +13,12 @@ export const PostPage = () => {
       try {
         const userInfo = await fetchJSON("/api/login");
         if (userInfo && userInfo.email) {
-          setUserProvider(userInfo.provider); // Set the user's provider
+          setUserProvider(userInfo.provider);
         } else {
-          navigate("/login"); // Redirect to login if not authenticated
+          navigate("/login");
         }
       } catch (err) {
-        navigate("/login"); // Redirect to login if there's an error
+        navigate("/login");
       }
     };
 
@@ -30,7 +29,7 @@ export const PostPage = () => {
     return (
       <div>
         <p>Access Denied. Only GitHub users can create posts.</p>
-        <Link to="/">Go back to the homepage</Link> {/* Link to homepage */}
+        <Link to="/">Go back to the homepage</Link>
       </div>
     );
   }

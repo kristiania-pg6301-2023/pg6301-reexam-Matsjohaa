@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { fetchJSON } from "../utils/json";
-import "../css/navbar.css";
 
 export const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userProvider, setUserProvider] = useState(null); // Track the user's provider
+  const [userProvider, setUserProvider] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -14,7 +13,7 @@ export const Navbar = () => {
         const userInfo = await fetchJSON("/api/login");
         if (userInfo && userInfo.email) {
           setIsLoggedIn(true);
-          setUserProvider(userInfo.provider); // Set the user's provider
+          setUserProvider(userInfo.provider);
         }
       } catch (err) {
         setIsLoggedIn(false);
