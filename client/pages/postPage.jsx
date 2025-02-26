@@ -6,6 +6,7 @@ import { Navbar } from "../components/navBar";
 
 export const PostPage = () => {
   const [userProvider, setUserProvider] = useState(null);
+  const [loading, setLoading] = useState(true); // Add a loading state
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -19,11 +20,17 @@ export const PostPage = () => {
         }
       } catch (err) {
         navigate("/login");
+      } finally {
+        setLoading(false); // Set loading to false after the check is complete
       }
     };
 
     checkLoginStatus();
   }, [navigate]);
+
+  if (loading) {
+    return <div className="loading-message">Loading...</div>; // Show a loading message while checking
+  }
 
   if (userProvider !== "github") {
     return (
