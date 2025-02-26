@@ -1,14 +1,33 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Navbar } from "../components/navBar";
-import { PostList } from "../components/postList";
+import { Post } from "../components/Post";
+import { usePostActions } from "../utils/usePostActions"; // Import the shared logic
 
 export const FrontPage = () => {
+  const navigate = useNavigate();
+  const { posts, handleReact, handleDelete } = usePostActions(); // Use the shared logic
+
   return (
     <>
       <Navbar />
       <h1>Welcome to the Front Page!</h1>
-      <PostList />
+      <div
+        style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(3, 1fr)",
+          gap: "16px",
+        }}
+      >
+        {posts.map((post) => (
+          <Post
+            key={post._id}
+            post={post}
+            onDelete={handleDelete}
+            onReact={handleReact}
+          />
+        ))}
+      </div>
     </>
   );
 };
