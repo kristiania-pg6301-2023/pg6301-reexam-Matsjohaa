@@ -204,8 +204,25 @@ export const PostsApi = (db) => {
   });
 
   // Add these routes to your PostsApi router
+  router.get("/:postId", async (req, res) => {
+    const { postId } = req.params;
 
-  // Fetch comments for a post
+    try {
+      const post = await db
+        .collection("posts")
+        .findOne({ _id: new ObjectId(postId) });
+
+      if (!post) {
+        return res.status(404).json({ error: "Post not found" });
+      }
+
+      res.status(200).json(post);
+    } catch (err) {
+      console.error("Failed to fetch post details:", err);
+      res.status(500).json({ error: "Failed to fetch post details" });
+    }
+  });
+  // can be deleted(?)
   router.get("/:postId/comments", async (req, res) => {
     const { postId } = req.params;
 
@@ -242,7 +259,7 @@ export const PostsApi = (db) => {
     }
 
     const comment = {
-      postId: new ObjectId(postId),
+      _id: new ObjectId(), // Generate a unique _id for the comment
       author,
       content,
       provider, // Store the provider for future reference
@@ -250,13 +267,78 @@ export const PostsApi = (db) => {
     };
 
     try {
-      await db.collection("comments").insertOne(comment);
+      // Find the post and update its comments array
+      const result = await db.collection("posts").updateOne(
+        { _id: new ObjectId(postId) }, // Find the post by its ID
+        { $push: { comments: comment } }, // Push the new comment into the comments array
+      );
+
+      if (result.modifiedCount === 0) {
+        throw new Error("Failed to add comment: Post not found or not updated");
+      }
+
       res.status(201).json(comment);
     } catch (err) {
       console.error("Failed to add comment:", err);
       res.status(500).json({ error: "Failed to add comment" });
     }
   });
+  // Delete a comment
+  router.delete("/:postId/comments/:commentId", async (req, res) => {
+    const { postId, commentId } = req.params;
+    const { username } = req.body; // Ensure the username is sent in the request
+
+    if (!username) {
+      return res
+        .status(401)
+        .json({ error: "You must be logged in to delete a comment" });
+    }
+
+    try {
+      // Find the post by its ID
+      const post = await db
+        .collection("posts")
+        .findOne({ _id: new ObjectId(postId) });
+
+      if (!post) {
+        return res.status(404).json({ error: "Post not found" });
+      }
+
+      // Find the comment in the post's comments array
+      const comment = post.comments.find(
+        (comment) => comment._id.toString() === commentId,
+      );
+
+      if (!comment) {
+        return res.status(404).json({ error: "Comment not found" });
+      }
+
+      // Only the author can delete their comment
+      if (comment.author !== username) {
+        return res
+          .status(403)
+          .json({ error: "You are not authorized to delete this comment" });
+      }
+
+      // Remove the comment from the post's comments array
+      const result = await db.collection("posts").updateOne(
+        { _id: new ObjectId(postId) },
+        { $pull: { comments: { _id: new ObjectId(commentId) } } }, // Remove the comment by its ID
+      );
+
+      if (result.modifiedCount === 0) {
+        throw new Error(
+          "Failed to delete comment: Comment not found or not deleted",
+        );
+      }
+
+      res.status(200).json({ message: "Comment deleted successfully" });
+    } catch (err) {
+      console.error("Failed to delete comment:", err);
+      res.status(500).json({ error: "Failed to delete comment" });
+    }
+  });
 
   return router;
 };
+//

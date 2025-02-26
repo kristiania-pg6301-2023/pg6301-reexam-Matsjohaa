@@ -4,19 +4,30 @@ import { useLoggedInUser } from "../utils/loginProvider";
 import { Navbar } from "../components/navBar";
 
 const fetchPostDetails = async (postId) => {
-  const response = await fetch(`/api/posts/${postId}/comments`);
+  const response = await fetch(`/api/posts/${postId}`);
   if (!response.ok) throw new Error("Failed to fetch post details");
   return response.json();
 };
 
-const addComment = async (comment) => {
-  const response = await fetch(`/api/posts/${comment.postId}/comments`, {
+const addComment = async (postId, comment) => {
+  const response = await fetch(`/api/posts/${postId}/comments`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    credentials: "include", // Include cookies for authentication
-    body: JSON.stringify(comment), // Include the provider in the request body
+    credentials: "include",
+    body: JSON.stringify(comment),
   });
   if (!response.ok) throw new Error("Failed to add comment");
+  return response.json();
+};
+
+const deleteComment = async (postId, commentId, username) => {
+  const response = await fetch(`/api/posts/${postId}/comments/${commentId}`, {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ username }),
+  });
+  if (!response.ok) throw new Error("Failed to delete comment");
   return response.json();
 };
 
@@ -25,14 +36,16 @@ export const PostDetails = () => {
   const navigate = useNavigate();
   const { loggedInUser } = useLoggedInUser();
   const [post, setPost] = useState(null);
-  const [comments, setComments] = useState([]);
   const [newComment, setNewComment] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
-      const postData = await fetchPostDetails(postId);
-      setPost(postData.post);
-      setComments(postData.comments);
+      try {
+        const postData = await fetchPostDetails(postId);
+        setPost(postData);
+      } catch (err) {
+        console.error("Error fetching post details:", err);
+      }
     };
     fetchData();
   }, [postId]);
@@ -40,28 +53,46 @@ export const PostDetails = () => {
   const handleAddComment = async () => {
     if (!newComment.trim()) return;
 
-    // Ensure the user is logged in with GitHub
     if (loggedInUser?.provider !== "github") {
       alert("Only GitHub users can comment.");
       return;
     }
 
     const comment = {
-      postId,
       author: loggedInUser.name,
       content: newComment,
-      provider: loggedInUser.provider, // Include the provider in the request body
+      provider: loggedInUser.provider,
       createdAt: new Date(),
     };
 
     try {
-      await addComment(comment);
-      setComments([...comments, comment]);
+      const response = await addComment(postId, comment);
+      setPost((prevPost) => ({
+        ...prevPost,
+        comments: [...prevPost.comments, response],
+      }));
       setNewComment("");
-      alert("Comment added successfully!"); // Optional: Add a success message
     } catch (err) {
       console.error("Failed to add comment:", err);
-      alert("Failed to add comment. Please try again."); // Optional: Add an error message
+      alert("Failed to add comment. Please try again.");
+    }
+  };
+
+  const handleDeleteComment = async (commentId) => {
+    if (!loggedInUser)
+      return alert("You must be logged in to delete a comment");
+
+    try {
+      await deleteComment(postId, commentId, loggedInUser.name);
+      setPost((prevPost) => ({
+        ...prevPost,
+        comments: prevPost.comments.filter(
+          (comment) => comment._id !== commentId,
+        ),
+      }));
+    } catch (err) {
+      console.error("Error deleting comment:", err);
+      alert("Failed to delete comment.");
     }
   };
 
@@ -80,18 +111,6 @@ export const PostDetails = () => {
       </p>
 
       <h2>Comments</h2>
-      {comments.map((comment, index) => (
-        <div
-          key={index}
-          style={{ borderBottom: "1px solid #ccc", padding: "8px 0" }}
-        >
-          <p>
-            <strong>{comment.author}</strong> -{" "}
-            {new Date(comment.createdAt).toLocaleString()}
-          </p>
-          <p>{comment.content}</p>
-        </div>
-      ))}
 
       {loggedInUser?.provider === "github" && (
         <div>
@@ -99,11 +118,32 @@ export const PostDetails = () => {
             value={newComment}
             onChange={(e) => setNewComment(e.target.value)}
             placeholder="Add a comment..."
-            style={{ width: "100%", marginTop: "16px" }}
+            style={{ width: "100%", marginBottom: "16px" }}
           />
           <button onClick={handleAddComment}>Submit Comment</button>
         </div>
       )}
+
+      {post.comments.map((comment) => (
+        <div
+          key={comment._id}
+          style={{ borderBottom: "1px solid #ccc", padding: "8px 0" }}
+        >
+          <p>
+            <strong>{comment.author}</strong> -{" "}
+            {new Date(comment.createdAt).toLocaleString()}
+          </p>
+          <p>{comment.content}</p>
+          {loggedInUser?.name === comment.author && (
+            <button
+              onClick={() => handleDeleteComment(comment._id)}
+              style={{ color: "red" }}
+            >
+              Delete
+            </button>
+          )}
+        </div>
+      ))}
     </div>
   );
 };
