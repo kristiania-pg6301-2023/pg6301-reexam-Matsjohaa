@@ -4,6 +4,19 @@ import { ObjectId } from "mongodb";
 export const PostsApi = (db) => {
   const router = Router();
   const postsCollection = db.collection("posts");
+  const userPostsCollection = db.collection("userPosts");
+
+  const checkPostLimit = async (username) => {
+    const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000); // Timestamp for 1 hour ago
+    const userPosts = await userPostsCollection
+      .find({
+        username,
+        createdAt: { $gte: oneHourAgo }, // Find posts created in the last hour
+      })
+      .toArray();
+
+    return userPosts.length >= 5; // Return true if the user has 5 or more posts in the last hour
+  };
 
   router.get("/", async (req, res) => {
     try {
@@ -19,8 +32,9 @@ export const PostsApi = (db) => {
     }
   });
   // Create a new post
+  // Create a new post
   router.post("/", async (req, res) => {
-    const { title, content, username } = req.body; // Get title, content, and username from request body
+    const { title, content, username } = req.body;
 
     if (!username) {
       return res
@@ -42,17 +56,34 @@ export const PostsApi = (db) => {
         .json({ error: "Post content must be between 10 and 1000 characters" });
     }
 
+    // Check if the user has exceeded the post limit
+    const hasExceededLimit = await checkPostLimit(username);
+    if (hasExceededLimit) {
+      return res
+        .status(429)
+        .json({ error: "You can only create 5 posts per hour." });
+    }
+
     const post = {
-      title, // Include title in the post object
+      title,
       content,
-      author: username, // Use username from request body
+      author: username,
       createdAt: new Date(),
       updatedAt: new Date(),
       reactions: [],
     };
 
     try {
+      // Insert the new post
       const result = await postsCollection.insertOne(post);
+
+      // Track the post in the userPosts collection
+      await userPostsCollection.insertOne({
+        username,
+        postId: result.insertedId,
+        createdAt: new Date(),
+      });
+
       res.status(201).json({ _id: result.insertedId, ...post });
     } catch (err) {
       console.error("Failed to insert post:", err);
@@ -64,7 +95,6 @@ export const PostsApi = (db) => {
     const { postId } = req.params;
     const { emoji, username } = req.body;
 
-    // Ensure the user is logged in, using session or token-based authentication
     if (!username) {
       return res.status(401).json({ error: "You must be logged in to react" });
     }
@@ -73,20 +103,21 @@ export const PostsApi = (db) => {
       const post = await postsCollection.findOne({ _id: new ObjectId(postId) });
       if (!post) return res.status(404).json({ error: "Post not found" });
 
-      // Ensure the user hasn't already reacted
-      if (post.reactions.includes(`${username}:${emoji}`)) {
-        return res
-          .status(400)
-          .json({ error: "You have already reacted with this emoji" });
-      }
-
-      // Add the reaction
-      await postsCollection.updateOne(
-        { _id: new ObjectId(postId) },
-        { $push: { reactions: `${username}:${emoji}` } },
+      // Remove the user's existing reaction (if any)
+      const updatedReactions = post.reactions.filter(
+        (reaction) => !reaction.startsWith(`${username}:`),
       );
 
-      res.status(200).json({ message: "Reaction added successfully" });
+      // Add the new reaction
+      updatedReactions.push(`${username}:${emoji}`);
+
+      // Update the post with the new reactions
+      await postsCollection.updateOne(
+        { _id: new ObjectId(postId) },
+        { $set: { reactions: updatedReactions } },
+      );
+
+      res.status(200).json({ message: "Reaction updated successfully" });
     } catch (err) {
       console.error("Failed to react to post:", err);
       res.status(500).json({ error: "Failed to react to post" });
@@ -154,6 +185,22 @@ export const PostsApi = (db) => {
     } catch (err) {
       console.error("Failed to delete post:", err);
       res.status(500).json({ error: "Failed to delete post" });
+    }
+  });
+
+  router.get("/user/:username", async (req, res) => {
+    const { username } = req.params;
+
+    try {
+      const posts = await postsCollection
+        .find({ author: username }) // Find posts by the specified author
+        .sort({ createdAt: -1 }) // Sort by createdAt in descending order (newest first)
+        .toArray();
+
+      res.status(200).json(posts);
+    } catch (err) {
+      console.error("Failed to fetch user posts:", err);
+      res.status(500).json({ error: "Failed to fetch user posts" });
     }
   });
 

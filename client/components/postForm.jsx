@@ -26,21 +26,19 @@ export const PostForm = () => {
     }
 
     try {
-      console.log(
-        "Sending request to /api/posts with title:",
-        title,
-        "and content:",
-        content,
-      );
-
       const response = await fetch("/api/posts", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ title, content, username: loggedInUser }), // Include title in the request
+        body: JSON.stringify({ title, content, username: loggedInUser }),
         credentials: "include",
       });
+
+      if (response.status === 429) {
+        alert("You can only create 5 posts per hour.");
+        return;
+      }
 
       if (!response.ok) throw new Error("Failed to create post");
 

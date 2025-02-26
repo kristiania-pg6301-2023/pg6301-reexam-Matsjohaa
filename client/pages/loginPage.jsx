@@ -4,6 +4,7 @@ import googleSignInImage from "../images/google-signin.png";
 import githubSignInImage from "../images/github-signin.png"; // Add a GitHub sign-in image
 import { LoginContext } from "../app";
 import { Link } from "react-router-dom";
+import { Navbar } from "../components/navBar";
 
 export const Login = () => {
   const {
@@ -94,7 +95,8 @@ export const Login = () => {
 
   return (
     <div>
-      <Link to="/">Home</Link>
+      <Navbar />
+
       <h1>Welcome to the Login Page!</h1>
       {error ? (
         <p>{error}</p>

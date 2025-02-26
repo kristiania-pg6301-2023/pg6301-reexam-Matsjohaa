@@ -47,9 +47,9 @@ export const PostList = () => {
       }
 
       const data = await response.json();
-      console.log("Reaction added:", data);
+      console.log("Reaction updated:", data);
       fetchPosts(); // Refresh the posts after reacting
-      alert("Reaction added!");
+      alert("Reaction updated!");
     } catch (err) {
       console.error("Failed to react to post:", err);
       alert("Failed to react to post. Please try again.");
@@ -119,6 +119,8 @@ export const PostList = () => {
               <button onClick={() => handleReact(post._id, "👍")}>👍</button>
               <button onClick={() => handleReact(post._id, "❤️")}>❤️</button>
               <button onClick={() => handleReact(post._id, "😂")}>😂</button>
+              <button onClick={() => handleReact(post._id, "😡")}>😡</button>
+              <button onClick={() => handleReact(post._id, "🎉")}>🎉</button>
             </div>
           )}
           {loggedInUser === post.author && (
