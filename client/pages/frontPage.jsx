@@ -1,13 +1,17 @@
-// FrontPage.js
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Navbar } from "../components/navBar";
 import { Post } from "../components/Post";
-import { usePostActions } from "../utils/usePostActions"; // Import the shared logic
+import { usePostActions } from "../utils/usePostActions";
+import { useLoggedInUser } from "../utils/loginProvider";
 
 export const FrontPage = () => {
   const navigate = useNavigate();
-  const { posts, handleReact, handleDelete } = usePostActions(); // Fetch all posts
+  const { loggedInUser } = useLoggedInUser();
+  const { posts, handleReact, handleDelete } = usePostActions(
+    null,
+    loggedInUser,
+  ); // Pass loggedInUser
 
   return (
     <>

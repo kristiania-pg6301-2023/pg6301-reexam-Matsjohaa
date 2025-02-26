@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { usePostActions } from "../utils/usePostActions";
+import { useLoggedInUser } from "../utils/loginProvider"; // Import the useLoggedInUser hook
 
 export const EditPostPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { post } = location.state; // Get the post from the route state
-  const { handleEdit } = usePostActions();
+  const { loggedInUser } = useLoggedInUser(); // Get the logged-in user
+  const { handleEdit } = usePostActions(null, loggedInUser); // Pass loggedInUser to usePostActions
 
   const [title, setTitle] = useState(post.title);
   const [content, setContent] = useState(post.content);

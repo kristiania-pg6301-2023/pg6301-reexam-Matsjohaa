@@ -1,4 +1,3 @@
-// Profile.js
 import { useNavigate } from "react-router-dom";
 import { Post } from "../components/Post";
 import { usePostActions } from "../utils/usePostActions";
@@ -12,7 +11,8 @@ export const Profile = () => {
   const { loggedInUser } = useLoggedInUser();
   const { posts, handleReact, handleDelete, handleEdit } = usePostActions(
     loggedInUser?.name,
-  ); // Fetch user's posts
+    loggedInUser, // Pass loggedInUser
+  );
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

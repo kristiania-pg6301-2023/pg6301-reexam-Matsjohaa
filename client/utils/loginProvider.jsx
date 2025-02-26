@@ -8,7 +8,7 @@ export const useLoggedInUser = () => {
     const checkLoggedInUser = async () => {
       try {
         const response = await fetch("/api/login", {
-          credentials: "include",
+          credentials: "include", // Ensure cookies are sent
         });
 
         if (!response.ok) {

@@ -1,4 +1,3 @@
-// components/Post.js
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { useLoggedInUser } from "../utils/loginProvider";
@@ -9,6 +8,15 @@ export const Post = ({ post, onDelete, onReact, onEdit }) => {
 
   const handleEditClick = () => {
     navigate(`/edit-post/${post._id}`, { state: { post } });
+  };
+
+  const handleDeleteClick = () => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this post?",
+    );
+    if (confirmDelete) {
+      onDelete(post._id); // Call the onDelete function if the user confirms
+    }
   };
 
   return (
@@ -40,7 +48,8 @@ export const Post = ({ post, onDelete, onReact, onEdit }) => {
       {loggedInUser && loggedInUser.name === post.author && (
         <div>
           <button onClick={handleEditClick}>Edit</button>
-          <button onClick={() => onDelete(post._id)}>Delete</button>
+          <button onClick={handleDeleteClick}>Delete</button>{" "}
+          {/* Use handleDeleteClick */}
         </div>
       )}
 
