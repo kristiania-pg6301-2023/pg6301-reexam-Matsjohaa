@@ -31,7 +31,11 @@ export const PostForm = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ title, content, username: loggedInUser }),
+        body: JSON.stringify({
+          title,
+          content,
+          username: loggedInUser.name, // Send the username as a string
+        }),
         credentials: "include",
       });
 

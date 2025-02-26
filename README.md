@@ -19,7 +19,7 @@ siden oppgaven hadde som krav å ha tre roller, valgte jeg å løse det sånn he
 * [x] Brukere kan logge seg inn. Du kan velge brukere skal kunne registrere seg med brukere skal logge inn med Google eller Entra ID
 * [x] En bruker som er logget inn kan se på sin profilside
 * [x] Brukere skal forbli logget inn når de refresher websiden
-* [ ] en bruker som er logget inn kan klikke på et innlegg for hvem som har reagert på innlegget og kommentarer. Detaljene skal inkludere en overskrift, tekst, navn og bilde (om tilgjengelig) på den som publiserte den
+* [x] en bruker som er logget inn kan klikke på et innlegg for hvem som har reagert på innlegget og kommentarer. Detaljene skal inkludere en overskrift, tekst, navn og bilde (om tilgjengelig) på den som publiserte den
 * [x] Brukere kan publisere nye innlegg. Innlegg skal være mellom 10 ord og 1000 tegn (regnet med at mener mellom 10 og 1000 tegn, og ikke ord. )
 * [x] systemet hindrer en bruker fra å publisere mer enn 5 innlegg innefor en time
 * [x] brukeren skal forhindres å sende inn en nyhetsatikkel som mangler tekst (tolker som at du mener innlegg)
@@ -28,13 +28,13 @@ siden oppgaven hadde som krav å ha tre roller, valgte jeg å løse det sånn he
 * [x] brukere skal reakere på andres innlegg med en av flere emojis
 * [ ] valgfritt: brukere kan legge til kommentarer til andres innlegg
 * [ ] valgfritt Brukere kan legge til andre som venner
-* [ ] Alle feil fra serves skal presenters på en pen måte, med mulighet til å prøve igjen
+* [x] Alle feil fra serves skal presenters på en pen måte, med mulighet til å prøve igjen
 
 ## må-krav
 * [ ] read-me fil skal inneholde link til heroku og test coverage
 * [ ] npm start skal starte server og klient. cocurenntly og vite anbefales
 * [x] koden skal ha konsistent formattering. prettier og husky anbefales
-* [ ] nettsiden skal ha god layout med css grid og horisontal navigasjonsmeny. brukeren skal kunne navigere overalt uten å bruke "back eller redigere url"
+* [x] nettsiden skal ha god layout med css grid og horisontal navigasjonsmeny. brukeren skal kunne navigere overalt uten å bruke "back eller redigere url"
 * [x] serveren validerer at brukeren er logget inn
 * [ ] innlevering i zip-fil
 * [x] Data skal lagres i MongoDB

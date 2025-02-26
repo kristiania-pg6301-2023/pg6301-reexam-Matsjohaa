@@ -1,10 +1,10 @@
-export async function fetchJSON(url, options = {}) {
-  const response = await fetch(url, options);
+export const fetchJSON = async (url, options = {}) => {
+  const response = await fetch(url, {
+    ...options,
+    credentials: "include", // Ensure this line is present
+  });
   if (!response.ok) {
-    const errorMessage = await response.text();
-    throw new Error(
-      `Failed to load ${response.status} ${response.statusText}: ${errorMessage}`,
-    );
+    throw new Error(`Failed to load ${url} ${response.statusText}`);
   }
-  return response.json();
-}
+  return await response.json();
+};

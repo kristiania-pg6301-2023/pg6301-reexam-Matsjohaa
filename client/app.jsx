@@ -8,7 +8,7 @@ import { useLoader } from "./utils/hooks";
 import { fetchJSON } from "./utils/json";
 import { PostPage } from "./pages/postPage";
 import { EditPostPage } from "./pages/editPostPage";
-import { PostDetails } from "./pages/PostDetails";
+import { PostDetails } from "./pages/postDetails";
 
 export const LoginContext = React.createContext({});
 //

@@ -30,8 +30,7 @@ export const PostsApi = (db) => {
       res.status(500).json({ error: "Failed to fetch posts" });
     }
   });
-  // Create a new post
-  // Create a new post
+
   router.post("/", async (req, res) => {
     const { title, content, username } = req.body;
 
@@ -70,6 +69,7 @@ export const PostsApi = (db) => {
       createdAt: new Date(),
       updatedAt: new Date(),
       reactions: [],
+      comments: [],
     };
 
     try {
