@@ -30,15 +30,16 @@ export const Navbar = () => {
         method: "DELETE",
       });
 
-      // Clear user data from local storage
       localStorage.removeItem("userData");
 
-      // Update state
       setIsLoggedIn(false);
       setUserProvider(null);
 
-      // Redirect to home page
       navigate("/");
+
+      if (window.location.pathname === "/") {
+        window.location.reload(); // Forced refresh needed so user can't react/delete a post after logging out
+      }
     } catch (err) {
       console.error("Failed to logout:", err);
     }

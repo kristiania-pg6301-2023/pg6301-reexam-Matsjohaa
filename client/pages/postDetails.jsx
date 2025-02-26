@@ -37,6 +37,7 @@ export const PostDetails = () => {
   const { loggedInUser } = useLoggedInUser();
   const [post, setPost] = useState(null);
   const [newComment, setNewComment] = useState("");
+  const [loading, setLoading] = useState(true); // Add a loading state
 
   useEffect(() => {
     const fetchData = async () => {
@@ -45,6 +46,8 @@ export const PostDetails = () => {
         setPost(postData);
       } catch (err) {
         console.error("Error fetching post details:", err);
+      } finally {
+        setLoading(false); // Set loading to false after fetching
       }
     };
     fetchData();
@@ -96,7 +99,13 @@ export const PostDetails = () => {
     }
   };
 
-  if (!post) return <div>Loading...</div>;
+  if (loading) {
+    return <div className="loading-message">Loading post details...</div>; // Show loading message
+  }
+
+  if (!post) {
+    return <div className="error-message">Failed to load post details.</div>; // Show error message if post is null
+  }
 
   return (
     <div className="post-details-container">
@@ -130,25 +139,29 @@ export const PostDetails = () => {
           </div>
         )}
 
-        {post.comments.map((comment) => (
-          <div key={comment._id} className="comment-item">
-            <p className="comment-author">
-              <strong>{comment.author}</strong> -{" "}
-              <span className="comment-date">
-                {new Date(comment.createdAt).toLocaleString()}
-              </span>
-            </p>
-            <p className="comment-content">{comment.content}</p>
-            {loggedInUser?.name === comment.author && (
-              <button
-                className="comment-delete-button"
-                onClick={() => handleDeleteComment(comment._id)}
-              >
-                Delete
-              </button>
-            )}
-          </div>
-        ))}
+        {post.comments.length === 0 ? (
+          <p className="no-comments-message">No comments yet.</p>
+        ) : (
+          post.comments.map((comment) => (
+            <div key={comment._id} className="comment-item">
+              <p className="comment-author">
+                <strong>{comment.author}</strong> -{" "}
+                <span className="comment-date">
+                  {new Date(comment.createdAt).toLocaleString()}
+                </span>
+              </p>
+              <p className="comment-content">{comment.content}</p>
+              {loggedInUser?.name === comment.author && (
+                <button
+                  className="comment-delete-button"
+                  onClick={() => handleDeleteComment(comment._id)}
+                >
+                  Delete
+                </button>
+              )}
+            </div>
+          ))
+        )}
       </div>
     </div>
   );
