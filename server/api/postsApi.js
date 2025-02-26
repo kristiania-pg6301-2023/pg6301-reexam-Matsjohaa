@@ -245,6 +245,7 @@ export const PostsApi = (db) => {
       postId: new ObjectId(postId),
       author,
       content,
+      provider, // Store the provider for future reference
       createdAt: new Date(),
     };
 

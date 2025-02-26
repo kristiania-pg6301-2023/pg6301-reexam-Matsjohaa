@@ -13,7 +13,8 @@ const addComment = async (comment) => {
   const response = await fetch(`/api/posts/${comment.postId}/comments`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(comment),
+    credentials: "include", // Include cookies for authentication
+    body: JSON.stringify(comment), // Include the provider in the request body
   });
   if (!response.ok) throw new Error("Failed to add comment");
   return response.json();
@@ -39,6 +40,7 @@ export const PostDetails = () => {
   const handleAddComment = async () => {
     if (!newComment.trim()) return;
 
+    // Ensure the user is logged in with GitHub
     if (loggedInUser?.provider !== "github") {
       alert("Only GitHub users can comment.");
       return;
@@ -48,12 +50,19 @@ export const PostDetails = () => {
       postId,
       author: loggedInUser.name,
       content: newComment,
+      provider: loggedInUser.provider, // Include the provider in the request body
       createdAt: new Date(),
     };
 
-    await addComment(comment);
-    setComments([...comments, comment]);
-    setNewComment("");
+    try {
+      await addComment(comment);
+      setComments([...comments, comment]);
+      setNewComment("");
+      alert("Comment added successfully!"); // Optional: Add a success message
+    } catch (err) {
+      console.error("Failed to add comment:", err);
+      alert("Failed to add comment. Please try again."); // Optional: Add an error message
+    }
   };
 
   if (!post) return <div>Loading...</div>;
