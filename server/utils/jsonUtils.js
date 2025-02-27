@@ -1,10 +1,12 @@
-import fetch from "node-fetch";
-
 export async function fetchJSON(url, options = { method: "GET" }) {
-  const res = await fetch(url, options);
-
-  if (!res.ok) {
-    throw new Error(`Failed ${res.status}`);
+  try {
+    const res = await fetch(url, options);
+    if (!res.ok) {
+      throw new Error(`Failed ${res.status}`);
+    }
+    return await res.json();
+  } catch (error) {
+    // Catch any fetch errors (network failure, etc.)
+    throw new Error(`Network Error: ${error.message}`);
   }
-  return await res.json();
 }
