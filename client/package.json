@@ -2,22 +2,34 @@
   "name": "client",
   "version": "1.0.0",
   "description": "",
+  "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "vitest --coverage",
+    "build": "npm install --include=dev && npm run build:parcel",
+    "build:parcel": "parcel build index.html",
     "dev": "parcel watch index.html",
-    "clean": "powershell -Command \"Remove-Item -Recurse -Force -ErrorAction SilentlyContinue node_modules; Remove-Item -Recurse -Force -ErrorAction SilentlyContinue dist; Remove-Item -Recurse -Force -ErrorAction SilentlyContinue .parcel-cache; npm cache clean --force\" && npm install"  },
+    "clean": "powershell -Command \"Remove-Item -Recurse -Force -ErrorAction SilentlyContinue node_modules; Remove-Item -Recurse -Force -ErrorAction SilentlyContinue dist; Remove-Item -Recurse -Force -ErrorAction SilentlyContinue .parcel-cache; npm cache clean --force\" && npm install"
+  },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.2.0",
+    "@vitejs/plugin-react": "^4.3.4",
+    "@vitest/coverage-v8": "^3.0.7",
     "assert": "^2.1.0",
+    "jest": "^29.7.0",
+    "jsdom": "^26.0.0",
     "parcel": "^2.13.3",
-    "process": "^0.11.10"
+    "process": "^0.11.10",
+    "vitest": "^3.0.7"
   },
   "dependencies": {
     "@parcel/transformer-react-refresh-wrap": "^2.13.3",
     "js-cookie": "^3.0.5",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-router-dom": "^6.22.0"
+    "react-router-dom": "^6.22.0",
+    "react-scripts": "^5.0.1"
   }
 }

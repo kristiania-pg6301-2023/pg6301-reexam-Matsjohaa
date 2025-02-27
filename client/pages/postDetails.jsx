@@ -3,13 +3,13 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useLoggedInUser } from "../utils/loginProvider";
 import { Navbar } from "../components/navBar";
 
-const fetchPostDetails = async (postId) => {
+export const fetchPostDetails = async (postId) => {
   const response = await fetch(`/api/posts/${postId}`);
   if (!response.ok) throw new Error("Failed to fetch post details");
   return response.json();
 };
 
-const addComment = async (postId, comment) => {
+export const addComment = async (postId, comment) => {
   const response = await fetch(`/api/posts/${postId}/comments`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -20,7 +20,7 @@ const addComment = async (postId, comment) => {
   return response.json();
 };
 
-const deleteComment = async (postId, commentId, username) => {
+export const deleteComment = async (postId, commentId, username) => {
   const response = await fetch(`/api/posts/${postId}/comments/${commentId}`, {
     method: "DELETE",
     headers: { "Content-Type": "application/json" },
