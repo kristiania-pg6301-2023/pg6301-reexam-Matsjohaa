@@ -18,13 +18,13 @@ describe("PostsApi", () => {
   let app;
 
   beforeAll(async () => {
-    // Connect to a test database
     client = await MongoClient.connect("mongodb://localhost:27017", {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
     db = client.db("test_db");
-  });
+  }, 30000); // Set timeout to 30s
+
 
   beforeEach(async () => {
     // Clear the collections before each test
