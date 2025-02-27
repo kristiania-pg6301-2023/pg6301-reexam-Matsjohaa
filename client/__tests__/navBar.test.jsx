@@ -1,7 +1,7 @@
 import { describe, it, vi, beforeEach, afterEach, expect } from "vitest";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import { Navbar } from "../components/Navbar";
+import { Navbar } from "../components/navBar";
 import { fetchJSON } from "../utils/json";
 
 // Mock navigate from react-router

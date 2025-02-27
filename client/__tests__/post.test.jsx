@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import { Post } from "../components/Post";
+import { Post } from "../components/post";
 import { useNavigate } from "react-router-dom";
 import { useLoggedInUser } from "../utils/loginProvider";
 import { vi } from "vitest";
