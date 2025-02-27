@@ -2,6 +2,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { PostPage } from "../pages/postPage.jsx";
 import { fetchJSON } from "../utils/json";
 import { Link, useNavigate } from "react-router-dom";
+import { PostForm } from "../components/postForm.jsx";
 
 // Mock dependencies
 vi.mock("../utils/json", () => ({
