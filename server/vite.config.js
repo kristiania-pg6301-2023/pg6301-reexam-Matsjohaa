@@ -5,7 +5,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: "node", // Use jsdom for browser-like APIs
-    include: ["__tests__/**/*.test.{js,ts}"],
+    include: ["__tests__/*.test.{js,ts}"],
     coverage: {
       provider: "istanbul",
       reporter: ["text", "html"],
