@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { PostForm } from "../components/PostForm";
+import { PostForm } from "../components/postForm";
 import { fetchJSON } from "../utils/json";
 import { Link, useNavigate } from "react-router-dom";
 import { Navbar } from "../components/navBar";
