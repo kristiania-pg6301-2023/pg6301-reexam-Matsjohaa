@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Navbar } from "../components/navBar";
-import { Post } from "../components/Post";
+import { Post } from "../components/post";
 import { usePostActions } from "../utils/usePostActions";
 import { useLoggedInUser } from "../utils/loginProvider";
 
