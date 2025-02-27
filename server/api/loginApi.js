@@ -104,6 +104,9 @@ export const loginApi = (db) => {
 
   router.post("/", (req, res) => {
     const { access_token } = req.body;
+    if (!access_token) {
+      return res.status(400).send("No access token provided");
+    }
     res.cookie("access_token", access_token, { signed: true });
     res.sendStatus(200);
   });
