@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import { Post } from "../components/Post";
+import { Post } from "../components/post";
 import { usePostActions } from "../utils/usePostActions";
 import { Navbar } from "../components/navBar";
 import { useEffect, useState } from "react";
