@@ -37,10 +37,11 @@ describe("PostsApi", () => {
     app.use("/posts", PostsApi(db));
   });
 
-  afterAll(async () => {
-    // Close the database connection after all tests
+ afterAll(async () => {
+  if (client) {
     await client.close();
-  });
+  }
+}, 30000); 
 
   it("should create a new post", async () => {
     const res = await request(app).post("/posts").send({
