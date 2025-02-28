@@ -1,0 +1,55 @@
+name: Run Tests
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: Run Vitest
+    runs-on: ubuntu-latest
+    services:
+      mongodb:
+        image: mongo:6
+        ports:
+          - 27017:27017
+        env:
+          MONGO_INITDB_DATABASE: test_db
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Wait for MongoDB to be ready
+        run: |
+          until nc -z localhost 27017; do
+            echo "Waiting for MongoDB..."
+            sleep 1
+          done
+        shell: bash
+
+      - name: Build
+        run: npm run build
+
+      - name: Run tests with coverage
+        env:
+          MONGODB_URL: mongodb://localhost:27017/test_db
+          COOKIE_SECRET: ${{secrets.COOKIE_SECRET}}
+          GOOGLE_CLIENT_ID: ${{secrets.GOOGLE_CLIENT_ID}}
+          GOOGLE_CLIENT_SECRET: ${{secrets.GOOGLE_CLIENT_SECRET}}
+          REDIRECT_URI: ${{secrets.REDIRECT_URI}}
+          GITHUB_CLIENT_ID: ${{secrets.GITHUBAUTH_CLIENT_ID}}
+          GITHUB_CLIENT_SECRET: ${{secrets.GITHUBAUTH_CLIENT_SECRET}}
+          GITHUB_CALLBACK_URL: ${{secrets.GITHUBAUTH_CALLBACK_URL}}
+        run: npm run test

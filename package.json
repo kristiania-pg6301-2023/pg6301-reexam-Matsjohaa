@@ -1,0 +1,32 @@
+{
+  "name": "pg6301-reexam-matsjohaa",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "start": "cd client && npm run clean && cd .. && concurrently npm:dev:client npm:dev:server",
+    "dev": "cd client && npm run clean && cd .. && concurrently npm:dev:client npm:dev:server",
+    "dev:client": "cd client && npm run dev",
+    "dev:server": "cd server && npm run dev",
+    "build": "concurrently npm:build:client npm:build:server",
+    "build:server": "cd server && npm run build",
+    "build:client": "cd client && npm run build",
+    "test": "npm run test:client && npm run test:server",
+    "test:client": "cd client && npm run test",
+    "test:server": "cd server && npm run test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "concurrently": "^9.1.2",
+    "cookie-parser": "^1.4.7",
+    "prettier": "^3.5.1",
+    "react-router-dom": "^6.22.0"
+  },
+  "devDependencies": {
+    "@vitest/coverage-v8": "^3.0.7",
+    "vitest": "^3.0.7"
+  }
+}
