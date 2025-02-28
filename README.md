@@ -1,19 +1,20 @@
 [![Run Tests](https://github.com/kristiania-pg6301-2023/pg6301-reexam-Matsjohaa/actions/workflows/actions.yaml/badge.svg)](https://github.com/kristiania-pg6301-2023/pg6301-reexam-Matsjohaa/actions/workflows/actions.yaml)
 
 siden oppgaven hadde som krav å ha tre roller, valgte jeg å løse det sånn her:
-- gjester kan se innlegg, kommentarer og reaksjoner
-- google-brukere kan se innlegg og kommentarer + reagere på innlegg
+- gjester kan kun se innlegg, kommentarer og reaksjoner, men ikke ragere, legge ut noe, eller kommentere
+- google-brukere kan se innlegg og kommentarer + reagere på innlegg, men ikke legge ut noe selv eller kommentere
 - github-brukere kan legge ut innlegg + kommentere på innlegg + reagere på innlegg 
 
 github-classroom link: https://github.com/kristiania-pg6301-2023/pg6301-reexam-Matsjohaa
 
 deployment link: 
 
-siden jeg ble ferdig med bacheloren min ifjor, og tar opp dette faget på siden for å forbedre karakteren min, så har jeg ikke lenger github sudent developer pack gratis, og får heller ikke gratis credits på heroku. jeg prøvde å søke på å fornye pakken, men ble rejected to ganger:
+siden jeg ble ferdig med bacheloren min ifjor, og tar opp dette faget på siden i ettertid for å forbedre karakteren min, så har jeg ikke lenger github sudent developer pack gratis, og får dessverre heller ikke gratis credits på heroku. jeg prøvde å søke på å fornye pakken, men ble rejected to ganger:
 
 ![image](https://github.com/user-attachments/assets/02148630-c3e0-4157-9e23-bcbc0c7dbc7e)
 
-jeg valgte derfor å laste opp en video på youtube for å vise fram funksjonalitet: https://www.youtube.com/watch?v=7QhhKmQr_Tg
+siden jeg ikke har mulighet til å deploye valgte derfor å laste opp en video på youtube for å vise fram funksjonalitet til siden: https://www.youtube.com/watch?v=7QhhKmQr_Tg
+
 
 
 Siden coveralls krever godkjenning fra classroom eier, fikk jeg ikke til å lage rapport, men her er test dekkingen min:
