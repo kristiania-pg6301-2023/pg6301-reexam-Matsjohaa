@@ -13,6 +13,7 @@ siden jeg ble ferdig med bacheloren min ifjor, og tar opp dette faget på siden 
 
 ![image](https://github.com/user-attachments/assets/02148630-c3e0-4157-9e23-bcbc0c7dbc7e)
 
+jeg valgte derfor å laste opp en video på youtube for å vise fram funksjonalitet: https://www.youtube.com/watch?v=7QhhKmQr_Tg
 
 
 Siden coveralls krever godkjenning fra classroom eier, fikk jeg ikke til å lage rapport, men her er test dekkingen min:
