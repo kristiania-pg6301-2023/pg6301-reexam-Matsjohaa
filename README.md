@@ -1,3 +1,6 @@
+![Tests](https://github.com/matsjohaa/pg6301-reexam/actions/workflows/actions.yml/badge.svg)
+
+
 siden oppgaven hadde som krav å ha tre roller, valgte jeg å løse det sånn her:
 - gjester kan se innlegg, kommentarer og reaksjoner
 - google-brukere kan se innlegg og kommentarer + reagere på innlegg
