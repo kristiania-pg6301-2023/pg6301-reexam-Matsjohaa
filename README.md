@@ -1,5 +1,4 @@
-![Tests](https://github.com/Matsjohaa/pg6301-reexam-Matsjohaa/actions/workflows/actions.yml/badge.svg)
-
+[![Run Tests](https://github.com/kristiania-pg6301-2023/pg6301-reexam-Matsjohaa/actions/workflows/actions.yaml/badge.svg)](https://github.com/kristiania-pg6301-2023/pg6301-reexam-Matsjohaa/actions/workflows/actions.yaml)
 
 siden oppgaven hadde som krav å ha tre roller, valgte jeg å løse det sånn her:
 - gjester kan se innlegg, kommentarer og reaksjoner
