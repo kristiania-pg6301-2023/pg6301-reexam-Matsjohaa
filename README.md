@@ -1,3 +1,8 @@
+siden oppgaven hadde som krav å ha tre roller, valgte jeg å løse det sånn her:
+- gjester kan se innlegg, kommentarer og reaksjoner
+- google-brukere kan se innlegg og kommentarer + reagere på innlegg
+- github-brukere kan legge ut innlegg + kommentere på innlegg + reagere på innlegg 
+
 github-classroom link: https://github.com/kristiania-pg6301-2023/pg6301-reexam-Matsjohaa
 
 deployment link: 
@@ -7,10 +12,16 @@ siden jeg ble ferdig med bacheloren min ifjor, og tar opp dette faget på siden 
 ![image](https://github.com/user-attachments/assets/02148630-c3e0-4157-9e23-bcbc0c7dbc7e)
 
 
-siden oppgaven hadde som krav å ha tre roller, valgte jeg å løse det sånn her:
-- gjester kan se innlegg, kommentarer og reaksjoner
-- google-brukere kan se innlegg og kommentarer + reagere på innlegg
-- github-brukere kan legge ut innlegg + kommentere på innlegg + reagere på innlegg 
+
+Siden coveralls krever godkjenning fra classroom eier, fikk jeg ikke til å lage rapport, men her er test dekkingen min:
+
+Client:
+
+![image](https://github.com/user-attachments/assets/6f961146-6494-4a24-ade1-940fa8efe213)
+
+Server:
+
+![image](https://github.com/user-attachments/assets/4e20cbdf-730d-4267-8c2c-ed5ac1f8ea78)
 
 
 
@@ -32,14 +43,14 @@ siden oppgaven hadde som krav å ha tre roller, valgte jeg å løse det sånn he
 
 ## må-krav
 * [ ] read-me fil skal inneholde link til heroku og test coverage
-* [ ] npm start skal starte server og klient. cocurenntly og vite anbefales
+* [x] npm start skal starte server og klient. cocurenntly og vite anbefales
 * [x] koden skal ha konsistent formattering. prettier og husky anbefales
 * [x] nettsiden skal ha god layout med css grid og horisontal navigasjonsmeny. brukeren skal kunne navigere overalt uten å bruke "back eller redigere url"
 * [x] serveren validerer at brukeren er logget inn
-* [ ] innlevering i zip-fil
+* [x] innlevering i zip-fil
 * [x] Data skal lagres i MongoDB
 * [ ] applikasjonen skal deployes til Heroku
-* [ ] testene skal kjøre på github actions
+* [x] testene skal kjøre på github actions
 
 ## bør krav
 * [x] brukere kan logge seg på mer enn en openID connect Provider (github)
