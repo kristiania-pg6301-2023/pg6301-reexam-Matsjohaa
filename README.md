@@ -1,4 +1,4 @@
-![Tests](https://github.com/matsjohaa/pg6301-reexam/actions/workflows/actions.yml/badge.svg)
+![Tests](https://github.com/Matsjohaa/pg6301-reexam-Matsjohaa/actions/workflows/actions.yml/badge.svg)
 
 
 siden oppgaven hadde som krav å ha tre roller, valgte jeg å løse det sånn her:
