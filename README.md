@@ -1,23 +1,26 @@
 [![Run Tests](https://github.com/kristiania-pg6301-2023/pg6301-reexam-Matsjohaa/actions/workflows/actions.yaml/badge.svg)](https://github.com/kristiania-pg6301-2023/pg6301-reexam-Matsjohaa/actions/workflows/actions.yaml)
 
-siden oppgaven hadde som krav å ha tre roller, valgte jeg å løse det sånn her:
-- gjester kan kun se innlegg, kommentarer og reaksjoner, men ikke ragere, legge ut noe, eller kommentere
-- google-brukere kan se innlegg og kommentarer + reagere på innlegg, men ikke legge ut noe selv eller kommentere
-- github-brukere kan legge ut innlegg + kommentere på innlegg + reagere på innlegg 
+Siden oppgaven hadde som krav å ha tre roller, valgte jeg å løse det sånn her:
+- Gjester kan kun se innlegg, kommentarer og reaksjoner, men ikke ragere, legge ut noe, eller kommentere
+- Google-brukere kan se innlegg og kommentarer + reagere på innlegg, men ikke legge ut noe selv eller kommentere
+- Github-brukere kan legge ut innlegg + kommentere på innlegg + reagere på innlegg 
 
-github-classroom link: https://github.com/kristiania-pg6301-2023/pg6301-reexam-Matsjohaa
+Github-classroom link: https://github.com/kristiania-pg6301-2023/pg6301-reexam-Matsjohaa
 
-deployment link: 
+Deployment link: 
 
-siden jeg ble ferdig med bacheloren min ifjor, og tar opp dette faget på siden i ettertid for å forbedre karakteren min, så har jeg ikke lenger github sudent developer pack gratis, og får dessverre heller ikke gratis credits på heroku. jeg prøvde å søke på å fornye pakken, men ble rejected to ganger:
+Siden jeg ble ferdig med bacheloren min ifjor, og tar opp dette faget på siden i ettertid for å forbedre karakteren min, så har jeg ikke lenger github sudent developer pack gratis, og får dessverre heller ikke gratis credits på heroku. jeg prøvde å søke på å fornye pakken, men ble rejected to ganger:
 
 ![image](https://github.com/user-attachments/assets/02148630-c3e0-4157-9e23-bcbc0c7dbc7e)
 
-siden jeg ikke har mulighet til å deploye valgte derfor å laste opp en video på youtube for å vise fram funksjonalitet til siden: https://www.youtube.com/watch?v=7QhhKmQr_Tg
+Jeg prøvde meg på et gratis alternativ som heter render, men der måtte jeg ha access av eieren av github orginisasjonen for å koble seg til versjonskontrollen til repoet mitt, så det gikk heller ikke.
+
+Siden jeg ikke har mulighet til å deploye valgte derfor å laste opp en video på youtube for å vise fram funksjonalitet til siden, så man kan se den uten .env fil: https://www.youtube.com/watch?v=7QhhKmQr_Tg
+
+I videoen ser man også at det er en anonym test innlegg ute, dette er for å vise at man ikke kan redigere eller slette andres innlegg selv når man er logget inn med en github bruker.
 
 
-
-Siden coveralls krever godkjenning fra classroom eier, fikk jeg ikke til å lage rapport, men her er test dekkingen min:
+Siden coveralls også krever godkjenning fra classroom eier, fikk jeg ikke til å lage rapport på siden deres, men her er test dekkingen min:
 
 Client:
 
@@ -34,7 +37,7 @@ Server:
 * [x] Brukere kan logge seg inn. Du kan velge brukere skal kunne registrere seg med brukere skal logge inn med Google eller Entra ID
 * [x] En bruker som er logget inn kan se på sin profilside
 * [x] Brukere skal forbli logget inn når de refresher websiden
-* [x] en bruker som er logget inn kan klikke på et innlegg for hvem som har reagert på innlegget og kommentarer. Detaljene skal inkludere en overskrift, tekst, navn og bilde (om tilgjengelig) på den som publiserte den
+* [x] en bruker som er logget inn kan klikke på et innlegg for hvem som har reagert på innlegget og kommentarer. Detaljene skal inkludere en overskrift, tekst, navn og bilde (om tilgjengelig) på den som publiserte den (ikke fikset bilde, men man kan se det på profilen)
 * [x] Brukere kan publisere nye innlegg. Innlegg skal være mellom 10 ord og 1000 tegn (regnet med at mener mellom 10 og 1000 tegn, og ikke ord. )
 * [x] systemet hindrer en bruker fra å publisere mer enn 5 innlegg innefor en time
 * [x] brukeren skal forhindres å sende inn en nyhetsatikkel som mangler tekst (tolker som at du mener innlegg)
